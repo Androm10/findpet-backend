@@ -6,10 +6,13 @@ import config from './config';
 import databaseConfig from './config/database.config';
 
 import { ModulesModule } from './modules/modules.module';
+import { AppSequelizeModule } from './sequelize/sequelize.module';
 
 @Module({
   imports: [
+    AppSequelizeModule,
     ConfigModule.forRoot({
+      envFilePath: `.${process.env.NODE_ENVIRONMENT}.env`,
       load: [config, databaseConfig],
       isGlobal: true,
     }),

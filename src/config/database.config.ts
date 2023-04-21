@@ -1,10 +1,14 @@
+const e = process.env;
+console.log(e);
+
 export default () => ({
   database: {
-    dialect: process.env.DB_DIAL || 'mysql',
-    host: process.env.DB_HOST || 'localhost',
-    port: +process.env.DB_PORT || 3306,
-    username: process.env.DB_USER || 'root',
-    password: process.env.DB_PASS || '1111',
-    database: process.env.DB_NAME || 'gamestore',
+    dialect: e.DB_DIAL || 'mysql',
+    host: e.DB_HOST || 'mysql',
+    port: +e.DB_PORT || 3306,
+    username: e.DB_USER || 'root',
+    password: e.DB_PASS || '1111',
+    database: e.DB_NAME || 'diplome',
+    uri: `${e.DB_DIAL}://${e.DB_USER}:${e.DB_PASS}@${e.DB_HOST}:${e.DB_PORT}/${e.DB_NAME}`,
   },
 });
