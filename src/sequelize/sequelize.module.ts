@@ -10,7 +10,8 @@ import { sequelizeProviders } from './providers';
   imports: [
     SequelizeModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
-        ...configService.get('database'),
+        // ...configService.get('database'),
+        uri: configService.get('database.uri'),
         models: [UserModel],
       }),
       inject: [ConfigService],

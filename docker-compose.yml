@@ -11,8 +11,7 @@ services:
       - .:/app
       - /app/node_modules
     ports:
-      - 3000:3000
-      - 8080:8080
+      - '${PORT}:${PORT}'
     command: pnpm run start:dev
     depends_on:
       - mysql
@@ -27,7 +26,6 @@ services:
       - mysqldb:/var/lib/mysql
     environment:
       MYSQL_DATABASE: '${DB_NAME}'
-      MYSQL_USER: '${DB_USER}'
       MYSQL_PASSWORD: '${DB_PASS}'
       MYSQL_ROOT_PASSWORD: '${DB_PASS}'
 
