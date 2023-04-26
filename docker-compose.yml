@@ -9,7 +9,6 @@ services:
       - .env
     volumes:
       - .:/app
-      - /app/node_modules
     ports:
       - '${PORT}:${PORT}'
     command: pnpm run start:dev
@@ -28,7 +27,15 @@ services:
       MYSQL_DATABASE: '${DB_NAME}'
       MYSQL_PASSWORD: '${DB_PASS}'
       MYSQL_ROOT_PASSWORD: '${DB_PASS}'
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis:/data
 
 volumes:
   mysqldb:
+  redis:
     driver: local

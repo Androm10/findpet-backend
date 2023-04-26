@@ -1,32 +1,73 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository as TypeOrmRepository } from 'typeorm';
 import { UserEntity } from 'src/core/entities/user-entity';
-import { Repository } from 'src/core/interfaces/repository';
-import { UserModel } from 'src/sequelize/models/user.model';
+import { UserModel } from 'src/typeorm/models/user.model';
+import { IUserRepository } from 'src/core/interfaces/user-repository';
+import { RoleModel } from 'src/typeorm/models/role.model';
 
 @Injectable()
-export class UserRepository implements Repository<UserEntity> {
-  constructor(@InjectModel(UserModel) private userModel: typeof UserModel) {}
+export class UserRepository implements IUserRepository {
+  constructor(
+    @InjectRepository(UserModel)
+    private userModel: TypeOrmRepository<UserModel>,
+    @InjectRepository(RoleModel)
+    private roleModel: TypeOrmRepository<RoleModel>,
+  ) {}
 
-  get(id: number): Promise<UserEntity> {
-    throw new Error('Method not implemented.');
+  async assignRole(userId: number, roleName: string): Promise<UserEntity> {
+    const user = await this.userModel.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    const role = await this.roleModel.findOne({
+      where: { name: roleName },
+    });
+
+    if (!user || !role) {
+      throw new Error('No such user or role');
+    }
+
+    user.roles.push(role);
+
+    await this.userModel.save(user);
+    return new UserEntity(user);
   }
-  async getAll(): Promise<UserEntity[]> {
-    const users = await this.userModel.findAll();
 
+  async getByLogin(login: string): Promise<UserEntity> {
+    const user = await this.userModel.findOne({ where: { login } });
+    return new UserEntity(user);
+  }
+
+  async get(id: number): Promise<UserEntity> {
+    const user = await this.userModel.findOne({ where: { id } });
+    return new UserEntity(user);
+  }
+
+  async getAll(): Promise<UserEntity[]> {
+    const users = await this.userModel.find();
     return users.map((u) => u as UserEntity);
   }
+
   async create(data: Omit<UserEntity, 'id'>): Promise<UserEntity> {
     const user = await this.userModel.create(data);
+    this.userModel.save(user);
     return user as UserEntity;
   }
-  update(
+
+  async update(
     id: number,
     data: Partial<Omit<UserEntity, 'id'>>,
   ): Promise<UserEntity> {
-    throw new Error('Method not implemented.');
+    await this.userModel.update({ id }, data);
+
+    return new UserEntity({ ...data, id });
   }
-  delete(id: number): Promise<boolean> {
-    throw new Error('Method not implemented.');
+
+  async delete(id: number): Promise<boolean> {
+    await this.userModel.delete({ id });
+    return true;
   }
 }

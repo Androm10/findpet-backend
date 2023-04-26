@@ -1,24 +1,21 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import config from './config';
+import authConfig from './config/auth.config';
 import databaseConfig from './config/database.config';
 
 import { ModulesModule } from './modules/modules.module';
-import { AppSequelizeModule } from './sequelize/sequelize.module';
+import { AppTypeormModule } from './typeorm/typeorm.module';
 
 @Module({
   imports: [
-    AppSequelizeModule,
+    AppTypeormModule,
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENVIRONMENT}.env`,
-      load: [config, databaseConfig],
+      load: [config, databaseConfig, authConfig],
       isGlobal: true,
     }),
     ModulesModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
