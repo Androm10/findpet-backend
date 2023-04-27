@@ -1,3 +1,4 @@
+import { ObjectId } from 'typeorm';
 import { Entity } from './entity';
 
 export class AnimalEntity extends Entity {

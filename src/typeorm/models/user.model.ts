@@ -5,6 +5,7 @@ import {
   ManyToMany,
   BeforeInsert,
   OneToMany,
+  JoinTable,
 } from 'typeorm';
 import { hashPasword as hash } from 'src/common/utils/bcrypt';
 import { RoleModel } from './role.model';
@@ -26,11 +27,16 @@ export class UserModel {
   @Column()
   username: string;
 
-  @ManyToMany((type) => RoleModel, (role) => role.name)
+  @JoinTable()
+  @ManyToMany(() => RoleModel, (role) => role.name)
   roles: RoleModel[];
 
   @OneToMany(() => AnimalModel, (animal) => animal.user)
   animals: AnimalModel[];
+
+  @JoinTable()
+  @ManyToMany(() => AnimalModel, (animal) => animal.favoritedBy)
+  favorites: AnimalModel[];
 
   @BeforeInsert()
   async hashPassword() {

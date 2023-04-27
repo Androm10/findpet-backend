@@ -6,23 +6,29 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { NoAuth } from 'src/common/decorators/no-auth.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @NoAuth()
   @Get(':id')
   get(@Param('id') id: number) {
     return this.userService.get(id);
   }
 
+  @NoAuth()
   @Get()
-  getAll() {
-    return this.userService.getAll();
+  getAll(@Query('limit') limit: number, @Query('page') page: number) {
+    return this.userService.getAll(limit, page);
   }
 
   @Post()

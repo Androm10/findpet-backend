@@ -1,5 +1,11 @@
 import { IsOptional } from 'class-validator';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ShelterModel } from './shelter.model';
 import { UserModel } from './user.model';
 
@@ -32,4 +38,7 @@ export class AnimalModel {
     nullable: true,
   })
   user?: UserModel;
+
+  @ManyToMany(() => UserModel, (user) => user.favorites)
+  favoritedBy: UserModel[];
 }

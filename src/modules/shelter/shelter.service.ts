@@ -13,9 +13,11 @@ export class ShelterService {
   get(id: number): Promise<ShelterEntity> {
     return this.shelterRepository.get(id);
   }
-  getAll(): Promise<ShelterEntity[]> {
-    return this.shelterRepository.getAll();
+
+  getAll(limit?: number, page?: number) {
+    return this.shelterRepository.getAll(limit, page);
   }
+
   create(data: Omit<ShelterEntity, 'id'>): Promise<ShelterEntity> {
     return this.shelterRepository.create(data);
   }

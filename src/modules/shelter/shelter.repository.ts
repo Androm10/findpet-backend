@@ -4,6 +4,7 @@ import { Repository as TypeOrmRepository } from 'typeorm';
 import { Repository } from 'src/core/interfaces/repository';
 import { ShelterModel } from 'src/typeorm/models/shelter.model';
 import { ShelterEntity } from 'src/core/entities/shelter-entity';
+import { calculatePagination } from 'src/common/utils/calculatePagination';
 
 @Injectable()
 export class ShelterRepository implements Repository<ShelterEntity> {
@@ -17,11 +18,24 @@ export class ShelterRepository implements Repository<ShelterEntity> {
     return new ShelterEntity({ ...shelter, coords: shelter.pointToCoords() });
   }
 
-  async getAll() {
-    const shelters = await this.shelterModel.find();
-    return shelters.map(
-      (s) => new ShelterEntity({ ...s, coords: s.pointToCoords() }),
-    );
+  async getAll(limit?: number, page?: number) {
+    const { take, skip } = calculatePagination(limit, page);
+
+    const [shelters, count] = await this.shelterModel.findAndCount({
+      take,
+      skip,
+    });
+
+    const result = {
+      result: shelters.map(
+        (s) => new ShelterEntity({ ...s, coords: s.pointToCoords() }),
+      ),
+      limit: take,
+      page: page,
+      pages: Math.ceil(count / take),
+      count,
+    };
+    return result;
   }
 
   async create(data: Omit<ShelterEntity, 'id'>) {
@@ -29,8 +43,8 @@ export class ShelterRepository implements Repository<ShelterEntity> {
       ...data,
       coords: data.coords.toPoint(),
     });
-    this.shelterModel.save(shelter);
-    return new ShelterEntity({ ...shelter, coords: shelter.pointToCoords() });
+    const created = await this.shelterModel.save(shelter);
+    return new ShelterEntity({ ...created, coords: created.pointToCoords() });
   }
 
   async update(id: number, data: Partial<Omit<ShelterEntity, 'id'>>) {

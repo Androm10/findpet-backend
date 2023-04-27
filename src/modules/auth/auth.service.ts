@@ -7,10 +7,10 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
 import { UserService } from 'src/modules/user/user.service';
-import { SignupDto } from '../dto/signup.dto';
+import { SignupDto } from './dto/signup.dto';
 import { comparePassword } from 'src/common/utils/bcrypt';
-import { LoginDto } from '../dto/login.dto';
-import { GoogleUser } from '../strategies/google-oauth2.strategy';
+import { LoginDto } from './dto/login.dto';
+import { GoogleUser } from './strategies/google-oauth2.strategy';
 import { Cache } from 'cache-manager';
 
 @Injectable()

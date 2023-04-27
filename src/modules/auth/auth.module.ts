@@ -4,12 +4,12 @@ import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
-import { AuthService } from './services/auth.service';
+import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { UserModule } from '../user/user.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { GoogleOAuth2Strategy } from './strategies/google-oauth2.strategy';
-import { AuthController } from './controllers/auth.controller';
+import { AuthController } from './auth.controller';
 
 @Module({
   controllers: [AuthController],

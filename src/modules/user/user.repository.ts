@@ -5,6 +5,7 @@ import { UserEntity } from 'src/core/entities/user-entity';
 import { UserModel } from 'src/typeorm/models/user.model';
 import { IUserRepository } from 'src/core/interfaces/user-repository';
 import { RoleModel } from 'src/typeorm/models/role.model';
+import { calculatePagination } from 'src/common/utils/calculatePagination';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -20,16 +21,22 @@ export class UserRepository implements IUserRepository {
       where: {
         id: userId,
       },
+      relations: {
+        roles: true,
+      },
     });
+
+    if (!user) {
+      throw new Error('No such user');
+    }
 
     const role = await this.roleModel.findOne({
       where: { name: roleName },
     });
 
-    if (!user || !role) {
-      throw new Error('No such user or role');
+    if (!role) {
+      throw new Error('No such role');
     }
-
     user.roles.push(role);
 
     await this.userModel.save(user);
@@ -38,6 +45,9 @@ export class UserRepository implements IUserRepository {
 
   async getByLogin(login: string): Promise<UserEntity> {
     const user = await this.userModel.findOne({ where: { login } });
+    if (!user) {
+      return null;
+    }
     return new UserEntity(user);
   }
 
@@ -46,15 +56,34 @@ export class UserRepository implements IUserRepository {
     return new UserEntity(user);
   }
 
-  async getAll(): Promise<UserEntity[]> {
-    const users = await this.userModel.find();
-    return users.map((u) => u as UserEntity);
+  async getAll(limit?: number, page?: number) {
+    const { take, skip } = calculatePagination(limit, page);
+
+    const [users, count] = await this.userModel.findAndCount({
+      take,
+      skip,
+    });
+    const result = {
+      result: users.map((u) => u as UserEntity),
+      limit: take,
+      page: page,
+      pages: Math.ceil(count / take),
+      count,
+    };
+    return result;
   }
 
   async create(data: Omit<UserEntity, 'id'>): Promise<UserEntity> {
-    const user = await this.userModel.create(data);
-    this.userModel.save(user);
-    return user as UserEntity;
+    const user = this.userModel.create(data);
+    const created = await this.userModel.save(user);
+
+    const existing = await this.roleModel.findOne({ where: { name: 'USER' } });
+
+    if (!existing) {
+      const role = this.roleModel.create({ name: 'USER' });
+      await this.roleModel.save(role);
+    }
+    return new UserEntity(created);
   }
 
   async update(

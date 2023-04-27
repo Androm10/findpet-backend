@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  '@nestjs/cache-manager':
+    specifier: ^1.0.0
+    version: 1.0.0(@nestjs/common@9.0.0)(cache-manager@5.2.1)(reflect-metadata@0.1.13)(rxjs@7.2.0)
   '@nestjs/common':
     specifier: ^9.0.0
     version: 9.0.0(cache-manager@5.2.1)(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)(rxjs@7.2.0)
@@ -25,6 +28,9 @@ dependencies:
   '@nestjs/swagger':
     specifier: ^6.3.0
     version: 6.3.0(@nestjs/common@9.0.0)(@nestjs/core@9.0.0)(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)
+  '@nestjs/throttler':
+    specifier: ^4.0.0
+    version: 4.0.0(@nestjs/common@9.0.0)(@nestjs/core@9.0.0)(reflect-metadata@0.1.13)
   '@nestjs/typeorm':
     specifier: ^9.0.1
     version: 9.0.1(@nestjs/common@9.0.0)(@nestjs/core@9.0.0)(reflect-metadata@0.1.13)(rxjs@7.2.0)(typeorm@0.3.15)
@@ -34,6 +40,9 @@ dependencies:
   cache-manager:
     specifier: ^5.2.1
     version: 5.2.1
+  cache-manager-redis-store:
+    specifier: ^3.0.1
+    version: 3.0.1
   cache-manager-redis-yet:
     specifier: ^4.1.1
     version: 4.1.1
@@ -43,6 +52,9 @@ dependencies:
   class-validator:
     specifier: ^0.14.0
     version: 0.14.0
+  dotenv:
+    specifier: ^16.0.3
+    version: 16.0.3
   helmet:
     specifier: ^6.1.5
     version: 6.1.5
@@ -61,6 +73,9 @@ dependencies:
   passport-jwt:
     specifier: ^4.0.1
     version: 4.0.1
+  redis:
+    specifier: ^4.6.5
+    version: 4.6.5
   reflect-metadata:
     specifier: ^0.1.13
     version: 0.1.13
@@ -75,7 +90,7 @@ dependencies:
     version: 2.1.5(@types/node@18.15.11)(@types/validator@13.7.14)(reflect-metadata@0.1.13)(sequelize@6.31.0)
   typeorm:
     specifier: ^0.3.15
-    version: 0.3.15(mysql2@3.2.3)(ts-node@10.0.0)
+    version: 0.3.15(mysql2@3.2.3)(redis@4.6.5)(ts-node@10.0.0)
 
 devDependencies:
   '@nestjs/cli':
@@ -87,6 +102,12 @@ devDependencies:
   '@nestjs/testing':
     specifier: ^9.0.0
     version: 9.0.0(@nestjs/common@9.0.0)(@nestjs/core@9.0.0)(@nestjs/platform-express@9.0.0)
+  '@types/cache-manager':
+    specifier: ^4.0.2
+    version: 4.0.2
+  '@types/cache-manager-redis-store':
+    specifier: ^2.0.1
+    version: 2.0.1
   '@types/express':
     specifier: ^4.17.13
     version: 4.17.13
@@ -867,6 +888,20 @@ packages:
       - supports-color
     dev: false
 
+  /@nestjs/cache-manager@1.0.0(@nestjs/common@9.0.0)(cache-manager@5.2.1)(reflect-metadata@0.1.13)(rxjs@7.2.0):
+    resolution: {integrity: sha512-XMNdgsj3H+Ng/SYwFl13vRGNFA3e5Obk8LNwIuHLVSocnK2exReAWtscxEjQhoBc4FW4jAYOgU/U+mt18Q9T0g==}
+    peerDependencies:
+      '@nestjs/common': ^9.0.0
+      cache-manager: <=5
+      reflect-metadata: ^0.1.12
+      rxjs: ^7.0.0
+    dependencies:
+      '@nestjs/common': 9.0.0(cache-manager@5.2.1)(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)(rxjs@7.2.0)
+      cache-manager: 5.2.1
+      reflect-metadata: 0.1.13
+      rxjs: 7.2.0
+    dev: false
+
   /@nestjs/cli@9.0.0:
     resolution: {integrity: sha512-xT5uOoIEcaB/Fn6UeF7atfKqKiEEsTeRKPiM55p+e5H9WVw8FC2r4ceZgaINJbsw0QWskVj/ZQadMo6dA6hXxw==}
     engines: {node: '>= 12.9.0'}
@@ -1112,6 +1147,19 @@ packages:
       tslib: 2.4.0
     dev: true
 
+  /@nestjs/throttler@4.0.0(@nestjs/common@9.0.0)(@nestjs/core@9.0.0)(reflect-metadata@0.1.13):
+    resolution: {integrity: sha512-2T2S/hFhxROa/PZRZhHWFkrukxg3T8Db32Y04m6U6j6N2XqFGSKXhjfIbORO8kk/S2jswa9oTX/K12E120tgaQ==}
+    peerDependencies:
+      '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0
+      '@nestjs/core': ^7.0.0 || ^8.0.0 || ^9.0.0
+      reflect-metadata: ^0.1.13
+    dependencies:
+      '@nestjs/common': 9.0.0(cache-manager@5.2.1)(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)(rxjs@7.2.0)
+      '@nestjs/core': 9.0.0(@nestjs/common@9.0.0)(@nestjs/platform-express@9.0.0)(reflect-metadata@0.1.13)(rxjs@7.2.0)
+      md5: 2.3.0
+      reflect-metadata: 0.1.13
+    dev: false
+
   /@nestjs/typeorm@9.0.1(@nestjs/common@9.0.0)(@nestjs/core@9.0.0)(reflect-metadata@0.1.13)(rxjs@7.2.0)(typeorm@0.3.15):
     resolution: {integrity: sha512-A2BgLIPsMtmMI0bPKEf4bmzgFPsnvHqNBx3KkvaJ7hJrBQy0OqYOb+Rr06ifblKWDWS2tUPNrAFQbZjtk3PI+g==}
     peerDependencies:
@@ -1125,7 +1173,7 @@ packages:
       '@nestjs/core': 9.0.0(@nestjs/common@9.0.0)(@nestjs/platform-express@9.0.0)(reflect-metadata@0.1.13)(rxjs@7.2.0)
       reflect-metadata: 0.1.13
       rxjs: 7.2.0
-      typeorm: 0.3.15(mysql2@3.2.3)(ts-node@10.0.0)
+      typeorm: 0.3.15(mysql2@3.2.3)(redis@4.6.5)(ts-node@10.0.0)
       uuid: 8.3.2
     dev: false
 
@@ -1282,6 +1330,17 @@ packages:
       '@types/node': 18.15.11
     dev: true
 
+  /@types/cache-manager-redis-store@2.0.1:
+    resolution: {integrity: sha512-8QuccvcPieh1xM/5kReE76SfdcIdEB0ePc+54ah/NBuK2eG+6O50SX4WKoJX81UxGdW3sh/WlDaDNqjnqxWNsA==}
+    dependencies:
+      '@types/cache-manager': 4.0.2
+      '@types/redis': 2.8.32
+    dev: true
+
+  /@types/cache-manager@4.0.2:
+    resolution: {integrity: sha512-fT5FMdzsiSX0AbgnS5gDvHl2Nco0h5zYyjwDQy4yPC7Ww6DeGMVKPRqIZtg9HOXDV2kkc18SL1B0N8f0BecrCA==}
+    dev: true
+
   /@types/connect@3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
@@ -1411,6 +1470,12 @@ packages:
 
   /@types/range-parser@1.2.4:
     resolution: {integrity: sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==}
+    dev: true
+
+  /@types/redis@2.8.32:
+    resolution: {integrity: sha512-7jkMKxcGq9p242exlbsVzuJb57KqHRhNl4dHoQu2Y5v9bCAbtIXXH0R3HleSQW4CTOqpHIYUW3t6tpUj4BVQ+w==}
+    dependencies:
+      '@types/node': 18.15.11
     dev: true
 
   /@types/sequelize@4.28.14:
@@ -2058,6 +2123,13 @@ packages:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
     engines: {node: '>= 0.8'}
 
+  /cache-manager-redis-store@3.0.1:
+    resolution: {integrity: sha512-o560kw+dFqusC9lQJhcm6L2F2fMKobJ5af+FoR2PdnMVdpQ3f3Bz6qzvObTGyvoazQJxjQNWgMQeChP4vRTuXQ==}
+    engines: {node: '>= 16.18.0'}
+    dependencies:
+      redis: 4.6.5
+    dev: false
+
   /cache-manager-redis-yet@4.1.1:
     resolution: {integrity: sha512-3Mzug/4z57YXoFf8yF3U1B7Ga3ezeQR+xc1hgNVmoDk7mStdbSlnwoNSI8FoF7SBRy4MfBQXdg2zkWY7guqQzw==}
     engines: {node: '>= 16.17.0'}
@@ -2135,6 +2207,10 @@ packages:
   /chardet@0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
     dev: true
+
+  /charenc@0.0.2:
+    resolution: {integrity: sha512-yrLQ/yVUFXkzg7EDQsPieE/53+0RlaWTs+wBrvW36cyilJ2SaDWfl4Yj7MtLTXleV9uEKefbAGUPv2/iWSooRA==}
+    dev: false
 
   /chokidar@3.5.3:
     resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
@@ -2386,6 +2462,10 @@ packages:
       shebang-command: 2.0.0
       which: 2.0.2
     dev: true
+
+  /crypt@0.0.2:
+    resolution: {integrity: sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==}
+    dev: false
 
   /debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -3337,6 +3417,10 @@ packages:
       binary-extensions: 2.2.0
     dev: true
 
+  /is-buffer@1.1.6:
+    resolution: {integrity: sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==}
+    dev: false
+
   /is-core-module@2.11.0:
     resolution: {integrity: sha512-RRjxlvLDkD1YJwDbroBHMb+cukurkDWNyHx7D3oNB5x9rb5ogcksMC5wHCadcXoo67gVr/+3GFySh3134zi6rw==}
     dependencies:
@@ -4069,6 +4153,14 @@ packages:
     dependencies:
       tmpl: 1.0.5
     dev: true
+
+  /md5@2.3.0:
+    resolution: {integrity: sha512-T1GITYmFaKuO91vxyoQMFETst+O71VUPEU3ze5GNzDm0OWdP8v1ziTaAEPUr/3kLsY3Sftgz242A1SetQiDL7g==}
+    dependencies:
+      charenc: 0.0.2
+      crypt: 0.0.2
+      is-buffer: 1.1.6
+    dev: false
 
   /media-typer@0.3.0:
     resolution: {integrity: sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==}
@@ -5509,7 +5601,7 @@ packages:
   /typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
 
-  /typeorm@0.3.15(mysql2@3.2.3)(ts-node@10.0.0):
+  /typeorm@0.3.15(mysql2@3.2.3)(redis@4.6.5)(ts-node@10.0.0):
     resolution: {integrity: sha512-R4JSw8QjDP1W+ypeRz/XrCXIqubrLSnNAzJAp9EQSQIPHTv+YmUHZis8g08lOwFpuhqL9m8jkPSz8GWEKlU/ow==}
     engines: {node: '>= 12.9.0'}
     hasBin: true
@@ -5577,6 +5669,7 @@ packages:
       glob: 8.1.0
       mkdirp: 2.1.6
       mysql2: 3.2.3
+      redis: 4.6.5
       reflect-metadata: 0.1.13
       sha.js: 2.4.11
       ts-node: 10.0.0(@types/node@18.15.11)(typescript@4.7.4)

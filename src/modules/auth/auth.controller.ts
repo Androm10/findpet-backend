@@ -5,12 +5,12 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 import { Response } from 'express';
 
 import { NoAuth } from 'src/common/decorators/no-auth.decorator';
-import { GoogleOAuth2Guard } from 'src/common/guards/google-oauth.guard';
-import { GrantNewTokensDto } from '../dto/grant-new-tokens.dto';
-import { LoginDto } from '../dto/login.dto';
-import { SignupDto } from '../dto/signup.dto';
-import { AuthService } from '../services/auth.service';
-import { GoogleUser } from '../strategies/google-oauth2.strategy';
+import { GoogleOAuth2Guard } from './guards/google-oauth.guard';
+import { GrantNewTokensDto } from './dto/grant-new-tokens.dto';
+import { LoginDto } from './dto/login.dto';
+import { SignupDto } from './dto/signup.dto';
+import { AuthService } from './auth.service';
+import { GoogleUser } from './strategies/google-oauth2.strategy';
 
 @ApiTags('auth')
 @NoAuth()
@@ -46,7 +46,7 @@ export class AuthController {
   async googleAuthCallback(@Req() req, @Res() res: Response) {
     const user = req.user as GoogleUser;
     const token = await this.authService.loginGoogleAuth(user);
-    res.set('authorization', token.accessToken);
-    return res.json(token);
+    // res.set('authorization', token.accessToken);
+    return res.redirect(`http://localhost:3001/login?auth=${token}`);
   }
 }

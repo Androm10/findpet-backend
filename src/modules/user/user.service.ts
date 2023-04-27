@@ -1,7 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { USER_REPOSITORY } from 'src/common/constants/tokens';
 import { UserEntity } from 'src/core/entities/user-entity';
-import { Repository } from 'src/core/interfaces/repository';
 import { IUserRepository } from 'src/core/interfaces/user-repository';
 
 @Injectable()
@@ -13,9 +12,11 @@ export class UserService {
   get(id: number): Promise<UserEntity> {
     return this.userRepository.get(id);
   }
-  getAll(): Promise<UserEntity[]> {
-    return this.userRepository.getAll();
+
+  getAll(limit?: number, page?: number) {
+    return this.userRepository.getAll(limit, page);
   }
+
   create(data: Omit<UserEntity, 'id'>): Promise<UserEntity> {
     return this.userRepository.create(data);
   }
@@ -44,7 +45,7 @@ export class UserService {
     if (!user) {
       throw new BadRequestException('Cannot create user');
     }
-
+    console.log('created', user);
     return await this.userRepository.assignRole(user.id, 'USER');
   }
 }
