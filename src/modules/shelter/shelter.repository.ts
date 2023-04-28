@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository as TypeOrmRepository } from 'typeorm';
-import { Repository } from 'src/core/interfaces/repository';
 import { ShelterModel } from 'src/typeorm/models/shelter.model';
 import { ShelterEntity } from 'src/core/entities/shelter-entity';
 import { calculatePagination } from 'src/common/utils/calculatePagination';
+import { IShelterRepository } from 'src/core/interfaces/shelter-repository';
 
 @Injectable()
-export class ShelterRepository implements Repository<ShelterEntity> {
+export class ShelterRepository implements IShelterRepository {
   constructor(
     @InjectRepository(ShelterModel)
     private shelterModel: TypeOrmRepository<ShelterModel>,
@@ -18,10 +18,11 @@ export class ShelterRepository implements Repository<ShelterEntity> {
     return new ShelterEntity({ ...shelter, coords: shelter.pointToCoords() });
   }
 
-  async getAll(limit?: number, page?: number) {
+  async getAll(filter: any, limit?: number, page?: number) {
     const { take, skip } = calculatePagination(limit, page);
 
     const [shelters, count] = await this.shelterModel.findAndCount({
+      ...filter,
       take,
       skip,
     });
@@ -39,10 +40,11 @@ export class ShelterRepository implements Repository<ShelterEntity> {
   }
 
   async create(data: Omit<ShelterEntity, 'id'>) {
-    const shelter = await this.shelterModel.create({
+    const shelter = this.shelterModel.create({
       ...data,
       coords: data.coords.toPoint(),
     });
+    console.log(shelter);
     const created = await this.shelterModel.save(shelter);
     return new ShelterEntity({ ...created, coords: created.pointToCoords() });
   }

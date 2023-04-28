@@ -7,6 +7,8 @@ export class AnimalEntity extends Entity {
   type: string;
   age: number;
   orphanageDate?: Date;
+  shelterId?: number;
+  userId?: number;
 
   constructor(object: Partial<AnimalEntity>) {
     super();

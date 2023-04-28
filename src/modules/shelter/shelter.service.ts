@@ -2,20 +2,35 @@ import { Inject, Injectable } from '@nestjs/common';
 import { SHELTER_REPOSITORY } from 'src/common/constants/tokens';
 import { ShelterEntity } from 'src/core/entities/shelter-entity';
 import { Repository } from 'src/core/interfaces/repository';
+import { IShelterRepository } from 'src/core/interfaces/shelter-repository';
 
 @Injectable()
 export class ShelterService {
   constructor(
     @Inject(SHELTER_REPOSITORY)
-    private shelterRepository: Repository<ShelterEntity>,
+    private shelterRepository: IShelterRepository,
   ) {}
 
   get(id: number): Promise<ShelterEntity> {
     return this.shelterRepository.get(id);
   }
 
-  getAll(limit?: number, page?: number) {
-    return this.shelterRepository.getAll(limit, page);
+  getAll(filter: any, limit?: number, page?: number) {
+    return this.shelterRepository.getAll(filter, limit, page);
+  }
+
+  getByCity(cityId: number, limit?: number, page?: number) {
+    return this.shelterRepository.getAll(
+      {
+        where: {
+          city: {
+            id: cityId,
+          },
+        },
+      },
+      limit,
+      page,
+    );
   }
 
   create(data: Omit<ShelterEntity, 'id'>): Promise<ShelterEntity> {

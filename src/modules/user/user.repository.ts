@@ -44,7 +44,7 @@ export class UserRepository implements IUserRepository {
   }
 
   async getByLogin(login: string): Promise<UserEntity> {
-    const user = await this.userModel.findOne({ where: { login } });
+    const user = await this.userModel.findOne({ where: { login: login } });
     if (!user) {
       return null;
     }
@@ -56,7 +56,7 @@ export class UserRepository implements IUserRepository {
     return new UserEntity(user);
   }
 
-  async getAll(limit?: number, page?: number) {
+  async getAll(filter: any, limit?: number, page?: number) {
     const { take, skip } = calculatePagination(limit, page);
 
     const [users, count] = await this.userModel.findAndCount({
@@ -96,6 +96,7 @@ export class UserRepository implements IUserRepository {
   }
 
   async delete(id: number): Promise<boolean> {
+    console.log('id is ', id);
     await this.userModel.delete({ id });
     return true;
   }

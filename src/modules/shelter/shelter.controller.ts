@@ -10,7 +10,7 @@ import {
   Query,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { NoAuth } from 'src/common/decorators/no-auth.decorator';
 import { CreateShelterDto } from './dto/create-shelter.dto';
 import { UpdateShelterDto } from './dto/update-shelter.dto';
@@ -32,19 +32,33 @@ export class ShelterController {
   @NoAuth()
   @Get()
   getAll(@Query('limit') limit: number, @Query('page') page: number) {
-    return this.shelterService.getAll(limit, page);
+    return this.shelterService.getAll({}, limit, page);
   }
 
+  @UseInterceptors(CacheInterceptor)
+  @NoAuth()
+  @Get('getByCity/:id')
+  getByCity(
+    @Param('id') id: number,
+    @Query('limit') limit: number,
+    @Query('page') page: number,
+  ) {
+    return this.shelterService.getByCity(id, limit, page);
+  }
+
+  @ApiBearerAuth('JWT-auth')
   @Post()
-  create(@Body() createUserDto: CreateShelterDto) {
-    return this.shelterService.create(createUserDto);
+  create(@Body() createShelterDto: CreateShelterDto) {
+    return this.shelterService.create(createShelterDto);
   }
 
+  @ApiBearerAuth('JWT-auth')
   @Put(':id')
-  update(@Param('id') id: number, @Body() updateUserDto: UpdateShelterDto) {
-    return this.shelterService.update(id, updateUserDto);
+  update(@Param('id') id: number, @Body() updateShelterDto: UpdateShelterDto) {
+    return this.shelterService.update(id, updateShelterDto);
   }
 
+  @ApiBearerAuth('JWT-auth')
   @Delete('id')
   delete(@Param('id') id: number) {
     return this.shelterService.delete(id);

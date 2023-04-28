@@ -1,4 +1,5 @@
-import { Type } from 'class-transformer';
+import { PartialType } from '@nestjs/swagger';
+import { Transform, Type } from 'class-transformer';
 import {
   IsEmail,
   IsOptional,
@@ -8,7 +9,10 @@ import {
   MinLength,
   ValidateNested,
 } from 'class-validator';
+import { CityEntity } from 'src/core/entities/city.entity';
 import { Coords } from 'src/core/value-objects/coordinates.value-object';
+
+class CityDto extends PartialType(CityEntity) {}
 
 export class CreateShelterDto {
   @IsString()
@@ -16,8 +20,8 @@ export class CreateShelterDto {
   @MaxLength(100)
   name: string;
 
-  @ValidateNested({ each: true })
   @Type(() => Coords)
+  @ValidateNested()
   coords: Coords;
 
   @IsOptional()
@@ -35,4 +39,9 @@ export class CreateShelterDto {
   @IsOptional()
   @IsUrl()
   contactUrl?: string;
+
+  @IsOptional()
+  @Type(() => CityDto)
+  @ValidateNested()
+  city: CityDto;
 }

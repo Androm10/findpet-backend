@@ -7,6 +7,9 @@ export class CreateAnimalDto {
   @IsOptional()
   description?: string;
 
+  @IsOptional()
+  shelterId?: number;
+
   @IsString()
   type: string;
 

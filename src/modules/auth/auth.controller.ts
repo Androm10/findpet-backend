@@ -11,6 +11,7 @@ import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
 import { AuthService } from './auth.service';
 import { GoogleUser } from './strategies/google-oauth2.strategy';
+import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 
 @ApiTags('auth')
 @NoAuth()
@@ -29,10 +30,15 @@ export class AuthController {
     return await this.authService.signup(signupDto);
   }
 
+  @UseGuards(JwtRefreshGuard)
   @Post('/grantNewTokens')
-  async grantNewTokens(@Body() grantNewTokensDto: GrantNewTokensDto) {
+  async grantNewTokens(
+    @Body() grantNewTokensDto: GrantNewTokensDto,
+    @Req() req,
+  ) {
     return await this.authService.grantNewTokens(
       grantNewTokensDto.refreshToken,
+      req.user.id,
     );
   }
 

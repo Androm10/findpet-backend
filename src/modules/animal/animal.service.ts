@@ -14,8 +14,24 @@ export class AnimalService {
     return this.animalRepository.get(id);
   }
 
-  getAll(limit?: number, page?: number) {
-    return this.animalRepository.getAll(limit, page);
+  getByShelterId(id: number, limit?: number, page?: number) {
+    return this.animalRepository.getAll(
+      { where: { shelter: { id } } },
+      limit,
+      page,
+    );
+  }
+
+  getByUserId(id: number, limit?: number, page?: number) {
+    return this.animalRepository.getAll(
+      { where: { user: { id } } },
+      limit,
+      page,
+    );
+  }
+
+  getAll(filter?: any, limit?: number, page?: number) {
+    return this.animalRepository.getAll(filter, limit, page);
   }
 
   create(data: Omit<AnimalEntity, 'id'>): Promise<AnimalEntity> {

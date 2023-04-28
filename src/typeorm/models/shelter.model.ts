@@ -1,7 +1,15 @@
 import { IsEmail, IsOptional, IsUrl, Length } from 'class-validator';
 import { Coords } from 'src/core/value-objects/coordinates.value-object';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { AnimalModel } from './animal.model';
+import { CityModel } from './city.model';
 
 @Entity()
 export class ShelterModel {
@@ -36,11 +44,14 @@ export class ShelterModel {
   @OneToMany(() => AnimalModel, (animal) => animal.shelter)
   animals: AnimalModel[];
 
+  @ManyToOne(() => CityModel, (city) => city.shelters)
+  city: CityModel;
+
   pointToCoords() {
-    const commaIndex = this.coords.indexOf(',');
+    const spaceIndex = this.coords.indexOf(' ');
     return {
-      latitude: Number.parseFloat(this.coords.substring(6, commaIndex)),
-      longitude: Number.parseFloat(this.coords.substring(commaIndex)),
+      latitude: Number.parseFloat(this.coords.substring(6, spaceIndex)),
+      longitude: Number.parseFloat(this.coords.substring(spaceIndex)),
     } as Coords;
   }
 }

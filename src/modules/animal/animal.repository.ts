@@ -6,7 +6,7 @@ import { AnimalEntity } from 'src/core/entities/animal-entity';
 import { AnimalModel } from 'src/typeorm/models/animal.model';
 import { calculatePagination } from 'src/common/utils/calculatePagination';
 import { IAnimalRepository } from 'src/core/interfaces/animal-repository';
-import { UserModel } from 'src/typeorm/models';
+import { ShelterModel, UserModel } from 'src/typeorm/models';
 
 @Injectable()
 export class AnimalRepository implements IAnimalRepository {
@@ -15,32 +15,16 @@ export class AnimalRepository implements IAnimalRepository {
     private animalModel: TypeOrmRepository<AnimalModel>,
   ) {}
 
-  async makeFavorite(animalId: number, userId: number): Promise<AnimalEntity> {
-    const animal = await this.animalModel.findOne({
-      where: { id: animalId },
-      relations: {
-        favoritedBy: true,
-      },
-    });
-
-    if (!animal) {
-      throw new Error('No such animal');
-    }
-
-    animal.favoritedBy.push({ id: userId } as UserModel);
-    const saved = await this.animalModel.save(animal);
-    return new AnimalEntity(saved);
-  }
-
   async get(id: number): Promise<AnimalEntity> {
     const animal = await this.animalModel.findOne({ where: { id } });
     return new AnimalEntity(animal);
   }
 
-  async getAll(limit?: number, page?: number) {
+  async getAll(filter: any, limit?: number, page?: number) {
     const { take, skip } = calculatePagination(limit, page);
 
     const [animals, count] = await this.animalModel.findAndCount({
+      ...filter,
       take,
       skip,
     });
@@ -57,7 +41,10 @@ export class AnimalRepository implements IAnimalRepository {
   }
 
   async create(data: Omit<AnimalEntity, 'id'>): Promise<AnimalEntity> {
+    console.log('data', data);
     const animal = this.animalModel.create(data);
+    animal.shelter = { id: data.shelterId } as ShelterModel;
+    console.log('created', animal);
     const created = await this.animalModel.save(animal);
     return new AnimalEntity(created);
   }
@@ -74,5 +61,22 @@ export class AnimalRepository implements IAnimalRepository {
   async delete(id: number): Promise<boolean> {
     await this.animalModel.delete({ id });
     return true;
+  }
+
+  async makeFavorite(animalId: number, userId: number): Promise<AnimalEntity> {
+    const animal = await this.animalModel.findOne({
+      where: { id: animalId },
+      relations: {
+        favoritedBy: true,
+      },
+    });
+
+    if (!animal) {
+      throw new Error('No such animal');
+    }
+
+    animal.favoritedBy.push({ id: userId } as UserModel);
+    const saved = await this.animalModel.save(animal);
+    return new AnimalEntity(saved);
   }
 }

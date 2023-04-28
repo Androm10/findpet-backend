@@ -10,6 +10,7 @@ import { UserModule } from '../user/user.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { GoogleOAuth2Strategy } from './strategies/google-oauth2.strategy';
 import { AuthController } from './auth.controller';
+import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 
 @Module({
   controllers: [AuthController],
@@ -29,6 +30,7 @@ import { AuthController } from './auth.controller';
   providers: [
     AuthService,
     JwtStrategy,
+    JwtRefreshStrategy,
     GoogleOAuth2Strategy,
     {
       provide: APP_GUARD,

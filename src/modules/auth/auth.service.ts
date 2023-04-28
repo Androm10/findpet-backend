@@ -1,4 +1,4 @@
-import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   BadRequestException,
   ForbiddenException,
@@ -12,6 +12,7 @@ import { comparePassword } from 'src/common/utils/bcrypt';
 import { LoginDto } from './dto/login.dto';
 import { GoogleUser } from './strategies/google-oauth2.strategy';
 import { Cache } from 'cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class AuthService {
@@ -86,25 +87,15 @@ export class AuthService {
     };
   }
 
-  async grantNewTokens(refreshToken: string) {
-    try {
-      this.jwtService.verify(refreshToken, {
-        secret: this.configService.get('auth.refreshSecret'),
-      });
-    } catch (error) {
-      throw new ForbiddenException('Invalid token, cannot verify');
-    }
+  async grantNewTokens(refreshToken: string, userId: number) {
+    // const cachedToken = await this.cacheService.get(userId.toString());
 
-    const payload: any = this.jwtService.decode(refreshToken);
-
-    const cachedToken = await this.cacheService.get(payload.userId);
-
-    if (cachedToken !== refreshToken) {
-      throw new ForbiddenException('Invalid token, not equal to existing');
-    }
+    // if (cachedToken !== refreshToken) {
+    //   throw new ForbiddenException('Invalid token, not equal to existing');
+    // }
 
     const { accessToken, refreshToken: newRefreshToken } =
-      await this.generateTokens(payload.userId);
+      await this.generateTokens(userId);
 
     return {
       accessToken,
@@ -119,9 +110,12 @@ export class AuthService {
       'auth.refreshExpiresIn',
     );
 
-    const accessToken = this.jwtService.sign({
-      userId: userId,
-    });
+    const accessToken = this.jwtService.sign(
+      {
+        userId: userId,
+      },
+      { secret: this.configService.get('auth.secret') },
+    );
 
     const refreshToken = this.jwtService.sign(
       {
@@ -129,6 +123,7 @@ export class AuthService {
         refresh: true,
       },
       {
+        secret: this.configService.get('auth.refreshSecret'),
         expiresIn: refreshExpiresIn / 100,
       },
     );

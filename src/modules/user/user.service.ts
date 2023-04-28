@@ -13,8 +13,8 @@ export class UserService {
     return this.userRepository.get(id);
   }
 
-  getAll(limit?: number, page?: number) {
-    return this.userRepository.getAll(limit, page);
+  getAll(filter: any, limit?: number, page?: number) {
+    return this.userRepository.getAll(filter, limit, page);
   }
 
   create(data: Omit<UserEntity, 'id'>): Promise<UserEntity> {
