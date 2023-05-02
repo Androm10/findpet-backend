@@ -20,6 +20,8 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true,
       transformOptions: { enableImplicitConversion: true },
+      forbidUnknownValues: false,
+      // whitelist: true,
     }),
   );
 
@@ -32,9 +34,11 @@ async function bootstrap() {
         type: 'http',
         scheme: 'bearer',
         bearerFormat: 'JWT',
-        in: 'Header',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
       },
-      'access-token',
+      'JWT-auth',
     )
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
