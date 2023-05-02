@@ -6,11 +6,16 @@ import {
   BeforeInsert,
   OneToMany,
   JoinTable,
+  ManyToOne,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { hashPasword as hash } from 'src/common/utils/bcrypt';
 import { RoleModel } from './role.model';
-import { IsEmail } from 'class-validator';
+import { IsEmail, IsOptional } from 'class-validator';
 import { AnimalModel } from './animal.model';
+import { ShelterModel } from './shelter.model';
+import { PhotoModel } from './photo.model';
 
 @Entity()
 export class UserModel {
@@ -27,12 +32,23 @@ export class UserModel {
   @Column()
   username: string;
 
+  @Column()
+  @OneToOne(() => PhotoModel)
+  @JoinColumn()
+  avatar: PhotoModel;
+
   @JoinTable()
   @ManyToMany(() => RoleModel, (role) => role.name)
   roles: RoleModel[];
 
   @OneToMany(() => AnimalModel, (animal) => animal.user)
   animals: AnimalModel[];
+
+  @IsOptional()
+  @ManyToOne(() => ShelterModel, (shelter) => shelter.workers, {
+    cascade: false,
+  })
+  shelter: ShelterModel;
 
   @JoinTable()
   @ManyToMany(() => AnimalModel, (animal) => animal.favoritedBy)

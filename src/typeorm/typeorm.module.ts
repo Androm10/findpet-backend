@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AnimalModel } from './models/animal.model';
-import { CityModel } from './models/city.model';
-import { RegionModel } from './models/region.model';
-import { RoleModel } from './models/role.model';
-import { ShelterModel } from './models/shelter.model';
-import { UserModel } from './models/user.model';
+import {
+  AnimalModel,
+  CityModel,
+  PhotoModel,
+  RegionModel,
+  RoleModel,
+  ShelterModel,
+  UserModel,
+} from './models';
 
 @Module({
   imports: [
@@ -23,6 +26,7 @@ import { UserModel } from './models/user.model';
           RoleModel,
           ShelterModel,
           UserModel,
+          PhotoModel,
         ],
       }),
       inject: [ConfigService],

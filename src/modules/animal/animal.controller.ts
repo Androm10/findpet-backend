@@ -60,7 +60,8 @@ export class AnimalController {
 
   @ApiBearerAuth('JWT-auth')
   @Post()
-  create(@Body() createAnimalDto: CreateAnimalDto) {
+  create(@Body() createAnimalDto: CreateAnimalDto, @Req() req) {
+    createAnimalDto.userId = req.user.id;
     return this.animalService.create(createAnimalDto);
   }
 

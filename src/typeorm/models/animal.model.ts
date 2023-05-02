@@ -4,8 +4,10 @@ import {
   Entity,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { PhotoModel } from './photo.model';
 import { ShelterModel } from './shelter.model';
 import { UserModel } from './user.model';
 
@@ -33,6 +35,11 @@ export class AnimalModel {
     cascade: true,
   })
   shelter: ShelterModel;
+
+  @OneToMany(() => PhotoModel, (photo) => photo.animal, {
+    nullable: true,
+  })
+  photos: PhotoModel[];
 
   @ManyToOne(() => UserModel, (user) => user.animals, {
     nullable: true,

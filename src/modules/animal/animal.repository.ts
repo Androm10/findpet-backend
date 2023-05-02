@@ -7,6 +7,7 @@ import { AnimalModel } from 'src/typeorm/models/animal.model';
 import { calculatePagination } from 'src/common/utils/calculatePagination';
 import { IAnimalRepository } from 'src/core/interfaces/animal-repository';
 import { ShelterModel, UserModel } from 'src/typeorm/models';
+import { RepositoryError } from 'src/common/types/repository-error';
 
 @Injectable()
 export class AnimalRepository implements IAnimalRepository {
@@ -41,10 +42,13 @@ export class AnimalRepository implements IAnimalRepository {
   }
 
   async create(data: Omit<AnimalEntity, 'id'>): Promise<AnimalEntity> {
-    console.log('data', data);
     const animal = this.animalModel.create(data);
-    animal.shelter = { id: data.shelterId } as ShelterModel;
-    console.log('created', animal);
+    if (data.shelterId) {
+      animal.shelter = { id: data.shelterId } as ShelterModel;
+    }
+    if (data.userId) {
+      animal.user = { id: data.userId } as UserModel;
+    }
     const created = await this.animalModel.save(animal);
     return new AnimalEntity(created);
   }
@@ -72,7 +76,7 @@ export class AnimalRepository implements IAnimalRepository {
     });
 
     if (!animal) {
-      throw new Error('No such animal');
+      throw new RepositoryError('No such animal');
     }
 
     animal.favoritedBy.push({ id: userId } as UserModel);

@@ -8,6 +8,7 @@ export class ShelterEntity extends Entity {
   contactPhone?: string;
   contactEmail?: string;
   contactUrl?: string;
+  isVerified?: boolean;
 
   constructor(object: Partial<ShelterEntity>) {
     super();

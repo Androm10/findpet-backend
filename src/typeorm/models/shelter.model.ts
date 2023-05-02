@@ -10,6 +10,8 @@ import {
 } from 'typeorm';
 import { AnimalModel } from './animal.model';
 import { CityModel } from './city.model';
+import { PhotoModel } from './photo.model';
+import { UserModel } from './user.model';
 
 @Entity()
 export class ShelterModel {
@@ -41,11 +43,20 @@ export class ShelterModel {
   @Column({ nullable: true })
   contactUrl?: string;
 
+  @Column({ default: false })
+  isVerified: boolean;
+
+  @ManyToOne(() => PhotoModel, (photo) => photo.shelter, { nullable: true })
+  photos: PhotoModel[];
+
   @OneToMany(() => AnimalModel, (animal) => animal.shelter)
   animals: AnimalModel[];
 
   @ManyToOne(() => CityModel, (city) => city.shelters)
   city: CityModel;
+
+  @OneToMany(() => UserModel, (user) => user.shelter, { cascade: false })
+  workers: UserModel[];
 
   pointToCoords() {
     const spaceIndex = this.coords.indexOf(' ');

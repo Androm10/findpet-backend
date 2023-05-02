@@ -10,6 +10,9 @@ export class CreateAnimalDto {
   @IsOptional()
   shelterId?: number;
 
+  @IsOptional()
+  userId?: number;
+
   @IsString()
   type: string;
 

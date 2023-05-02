@@ -4,6 +4,7 @@ import { RegionModel } from './region.model';
 import { RoleModel } from './role.model';
 import { ShelterModel } from './shelter.model';
 import { UserModel } from './user.model';
+import { PhotoModel } from './photo.model';
 
 export {
   RegionModel,
@@ -12,4 +13,5 @@ export {
   ShelterModel,
   UserModel,
   CityModel,
+  PhotoModel,
 };

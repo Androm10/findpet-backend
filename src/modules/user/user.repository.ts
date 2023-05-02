@@ -6,6 +6,7 @@ import { UserModel } from 'src/typeorm/models/user.model';
 import { IUserRepository } from 'src/core/interfaces/user-repository';
 import { RoleModel } from 'src/typeorm/models/role.model';
 import { calculatePagination } from 'src/common/utils/calculatePagination';
+import { RepositoryError } from 'src/common/types/repository-error';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -27,7 +28,7 @@ export class UserRepository implements IUserRepository {
     });
 
     if (!user) {
-      throw new Error('No such user');
+      throw new RepositoryError('No such user');
     }
 
     const role = await this.roleModel.findOne({
@@ -35,7 +36,7 @@ export class UserRepository implements IUserRepository {
     });
 
     if (!role) {
-      throw new Error('No such role');
+      throw new RepositoryError('No such role');
     }
     user.roles.push(role);
 

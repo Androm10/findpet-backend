@@ -5,9 +5,11 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
+  Req,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -48,8 +50,13 @@ export class ShelterController {
 
   @ApiBearerAuth('JWT-auth')
   @Post()
-  create(@Body() createShelterDto: CreateShelterDto) {
-    return this.shelterService.create(createShelterDto);
+  create(@Body() createShelterDto: CreateShelterDto, @Req() req) {
+    return this.shelterService.create(createShelterDto, req.user.id);
+  }
+
+  @Patch(':id/addWorker/:workerId')
+  addWorker(@Param('id') id: number, @Param('workerId') workerId: number) {
+    return this.shelterService.addWorker(id, workerId);
   }
 
   @ApiBearerAuth('JWT-auth')
