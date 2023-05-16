@@ -9,7 +9,7 @@ export class UserService {
     @Inject(USER_REPOSITORY) private userRepository: IUserRepository,
   ) {}
 
-  get(id: number): Promise<UserEntity> {
+  get(id: number) {
     return this.userRepository.get(id);
   }
 
@@ -17,18 +17,15 @@ export class UserService {
     return this.userRepository.getAll(filter, limit, page);
   }
 
-  create(data: Omit<UserEntity, 'id'>): Promise<UserEntity> {
+  create(data: Omit<UserEntity, 'id'>) {
     return this.userRepository.create(data);
   }
 
-  update(
-    id: number,
-    data: Partial<Omit<UserEntity, 'id'>>,
-  ): Promise<UserEntity> {
+  update(id: number, data: Partial<Omit<UserEntity, 'id'>>) {
     return this.userRepository.update(id, data);
   }
 
-  delete(id: number): Promise<boolean> {
+  delete(id: number) {
     return this.userRepository.delete(id);
   }
 

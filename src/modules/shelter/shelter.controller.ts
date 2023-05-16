@@ -9,11 +9,15 @@ import {
   Post,
   Put,
   Query,
-  Req,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { NoAuth } from 'src/common/decorators/no-auth.decorator';
+import { UserRequest } from 'src/common/decorators/user.decorator';
+import { UserFromRequest } from 'src/common/types/user-request';
+import { Coords } from 'src/core/value-objects/coordinates.value-object';
+import { IsWorkerGuard } from '../auth/guards/is-worker.guard';
 import { CreateShelterDto } from './dto/create-shelter.dto';
 import { UpdateShelterDto } from './dto/update-shelter.dto';
 import { ShelterService } from './shelter.service';
@@ -23,11 +27,33 @@ import { ShelterService } from './shelter.service';
 export class ShelterController {
   constructor(private shelterService: ShelterService) {}
 
+  @NoAuth()
+  @Get('getNearest')
+  getNearest(
+    @Query('lat') latitude: number,
+    @Query('lng') longitude: number,
+    @Query('limit') limit: number,
+    @Query('page') page: number,
+  ) {
+    return this.shelterService.getNearest(
+      new Coords({ latitude, longitude }),
+      limit,
+      page,
+    );
+  }
+
   @UseInterceptors(CacheInterceptor)
   @NoAuth()
   @Get(':id')
   get(@Param('id') id: number) {
     return this.shelterService.get(id);
+  }
+
+  @UseInterceptors(CacheInterceptor)
+  @NoAuth()
+  @Get(':id/workers')
+  getWorkers(@Param('id') id: number) {
+    return this.shelterService.getWorkers(id);
   }
 
   @UseInterceptors(CacheInterceptor)
@@ -50,10 +76,15 @@ export class ShelterController {
 
   @ApiBearerAuth('JWT-auth')
   @Post()
-  create(@Body() createShelterDto: CreateShelterDto, @Req() req) {
-    return this.shelterService.create(createShelterDto, req.user.id);
+  create(
+    @Body() createShelterDto: CreateShelterDto,
+    @UserRequest() user: UserFromRequest,
+  ) {
+    return this.shelterService.create(createShelterDto, user.id);
   }
 
+  @ApiBearerAuth('JWT-auth')
+  @UseGuards(IsWorkerGuard)
   @Patch(':id/addWorker/:workerId')
   addWorker(@Param('id') id: number, @Param('workerId') workerId: number) {
     return this.shelterService.addWorker(id, workerId);

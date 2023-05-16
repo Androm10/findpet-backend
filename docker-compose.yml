@@ -43,8 +43,8 @@ services:
       MINIO_ROOT_USER: ${MINIO_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_PASS}
     ports:
-      - '${MINIO_UI_PORT}:${MINIO_UI_PORT}'
       - '${MINIO_API_PORT}:${MINIO_API_PORT}'
+      - '${MINIO_UI_PORT}:${MINIO_UI_PORT}'
     command: 'minio server --console-address ":${MINIO_API_PORT}" /data'
     volumes:
       - 'minio:/data'

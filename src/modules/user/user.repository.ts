@@ -17,7 +17,7 @@ export class UserRepository implements IUserRepository {
     private roleModel: TypeOrmRepository<RoleModel>,
   ) {}
 
-  async assignRole(userId: number, roleName: string): Promise<UserEntity> {
+  async assignRole(userId: number, roleName: string) {
     const user = await this.userModel.findOne({
       where: {
         id: userId,
@@ -44,7 +44,7 @@ export class UserRepository implements IUserRepository {
     return new UserEntity(user);
   }
 
-  async getByLogin(login: string): Promise<UserEntity> {
+  async getByLogin(login: string) {
     const user = await this.userModel.findOne({ where: { login: login } });
     if (!user) {
       return null;
@@ -52,7 +52,7 @@ export class UserRepository implements IUserRepository {
     return new UserEntity(user);
   }
 
-  async get(id: number): Promise<UserEntity> {
+  async get(id: number) {
     const user = await this.userModel.findOne({ where: { id } });
     return new UserEntity(user);
   }
@@ -74,7 +74,7 @@ export class UserRepository implements IUserRepository {
     return result;
   }
 
-  async create(data: Omit<UserEntity, 'id'>): Promise<UserEntity> {
+  async create(data: Omit<UserEntity, 'id'>) {
     const user = this.userModel.create(data);
     const created = await this.userModel.save(user);
 
@@ -87,17 +87,13 @@ export class UserRepository implements IUserRepository {
     return new UserEntity(created);
   }
 
-  async update(
-    id: number,
-    data: Partial<Omit<UserEntity, 'id'>>,
-  ): Promise<UserEntity> {
+  async update(id: number, data: Partial<Omit<UserEntity, 'id'>>) {
     await this.userModel.update({ id }, data);
 
     return new UserEntity({ ...data, id });
   }
 
-  async delete(id: number): Promise<boolean> {
-    console.log('id is ', id);
+  async delete(id: number) {
     await this.userModel.delete({ id });
     return true;
   }

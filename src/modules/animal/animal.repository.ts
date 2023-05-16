@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository as TypeOrmRepository } from 'typeorm';
-import { Repository } from 'src/core/interfaces/repository';
+
 import { AnimalEntity } from 'src/core/entities/animal-entity';
 import { AnimalModel } from 'src/typeorm/models/animal.model';
 import { calculatePagination } from 'src/common/utils/calculatePagination';
@@ -16,7 +16,7 @@ export class AnimalRepository implements IAnimalRepository {
     private animalModel: TypeOrmRepository<AnimalModel>,
   ) {}
 
-  async get(id: number): Promise<AnimalEntity> {
+  async get(id: number) {
     const animal = await this.animalModel.findOne({ where: { id } });
     return new AnimalEntity(animal);
   }
@@ -41,7 +41,7 @@ export class AnimalRepository implements IAnimalRepository {
     return result;
   }
 
-  async create(data: Omit<AnimalEntity, 'id'>): Promise<AnimalEntity> {
+  async create(data: Omit<AnimalEntity, 'id'>) {
     const animal = this.animalModel.create(data);
     if (data.shelterId) {
       animal.shelter = { id: data.shelterId } as ShelterModel;
@@ -53,21 +53,18 @@ export class AnimalRepository implements IAnimalRepository {
     return new AnimalEntity(created);
   }
 
-  async update(
-    id: number,
-    data: Partial<Omit<AnimalEntity, 'id'>>,
-  ): Promise<AnimalEntity> {
+  async update(id: number, data: Partial<Omit<AnimalEntity, 'id'>>) {
     await this.animalModel.update({ id }, data);
 
     return new AnimalEntity({ ...data, id });
   }
 
-  async delete(id: number): Promise<boolean> {
+  async delete(id: number) {
     await this.animalModel.delete({ id });
     return true;
   }
 
-  async makeFavorite(animalId: number, userId: number): Promise<AnimalEntity> {
+  async makeFavorite(animalId: number, userId: number) {
     const animal = await this.animalModel.findOne({
       where: { id: animalId },
       relations: {

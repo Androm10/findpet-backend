@@ -13,11 +13,9 @@ export class PhotoModel {
   @Column()
   url: string;
 
-  @Column()
   @ManyToOne(() => AnimalModel, (animal) => animal.photos, { nullable: true })
   animal: AnimalModel;
 
-  @Column()
   @ManyToOne(() => ShelterModel, (shelter) => shelter.photos, {
     nullable: true,
   })

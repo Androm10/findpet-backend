@@ -2,6 +2,7 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { SHELTER_REPOSITORY } from 'src/common/constants/tokens';
 import { ShelterEntity } from 'src/core/entities/shelter-entity';
 import { IShelterRepository } from 'src/core/interfaces/shelter-repository';
+import { Coords } from 'src/core/value-objects/coordinates.value-object';
 
 @Injectable()
 export class ShelterService {
@@ -12,6 +13,10 @@ export class ShelterService {
 
   get(id: number): Promise<ShelterEntity> {
     return this.shelterRepository.get(id);
+  }
+
+  getWorkers(id: number) {
+    return this.shelterRepository.getWorkers(id);
   }
 
   getAll(filter: any, limit?: number, page?: number) {
@@ -32,10 +37,11 @@ export class ShelterService {
     );
   }
 
-  create(
-    data: Omit<ShelterEntity, 'id'>,
-    creatorId: number,
-  ): Promise<ShelterEntity> {
+  getNearest(coords: Coords, limit?: number, page?: number) {
+    return this.shelterRepository.getNearest(coords, limit, page);
+  }
+
+  create(data: Omit<ShelterEntity, 'id'>, creatorId: number) {
     return this.shelterRepository.create(data, creatorId);
   }
 
@@ -49,14 +55,11 @@ export class ShelterService {
     return this.shelterRepository.addWorker(id, workerId);
   }
 
-  update(
-    id: number,
-    data: Partial<Omit<ShelterEntity, 'id'>>,
-  ): Promise<ShelterEntity> {
+  update(id: number, data: Partial<Omit<ShelterEntity, 'id'>>) {
     return this.shelterRepository.update(id, data);
   }
 
-  delete(id: number): Promise<boolean> {
+  delete(id: number) {
     return this.shelterRepository.delete(id);
   }
 }

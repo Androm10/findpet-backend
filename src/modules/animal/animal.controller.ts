@@ -9,10 +9,14 @@ import {
   Put,
   Query,
   Req,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { NoAuth } from 'src/common/decorators/no-auth.decorator';
+import { UserRequest } from 'src/common/decorators/user.decorator';
+import { UserFromRequest } from 'src/common/types/user-request';
+import { IsWorkerGuard } from '../auth/guards/is-worker.guard';
 import { AnimalService } from './animal.service';
 import { CreateAnimalDto } from './dto/create-animal.dto';
 import { UpdateAnimalDto } from './dto/update-animal.dto';
@@ -59,9 +63,13 @@ export class AnimalController {
   }
 
   @ApiBearerAuth('JWT-auth')
+  @UseGuards(IsWorkerGuard)
   @Post()
-  create(@Body() createAnimalDto: CreateAnimalDto, @Req() req) {
-    createAnimalDto.userId = req.user.id;
+  create(
+    @Body() createAnimalDto: CreateAnimalDto,
+    @UserRequest() user: UserFromRequest,
+  ) {
+    createAnimalDto.userId = user.id;
     return this.animalService.create(createAnimalDto);
   }
 
@@ -73,8 +81,8 @@ export class AnimalController {
 
   @ApiBearerAuth('JWT-auth')
   @Put(':id/favorite')
-  makeFavorite(@Param('id') id: number, @Req() req) {
-    return this.animalService.makeFavorite(id, req.user.id);
+  makeFavorite(@Param('id') id: number, @UserRequest() user: UserFromRequest) {
+    return this.animalService.makeFavorite(id, user.id);
   }
 
   @ApiBearerAuth('JWT-auth')

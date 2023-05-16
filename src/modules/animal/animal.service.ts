@@ -10,7 +10,7 @@ export class AnimalService {
     private animalRepository: IAnimalRepository,
   ) {}
 
-  get(id: number): Promise<AnimalEntity> {
+  get(id: number) {
     return this.animalRepository.get(id);
   }
 
@@ -34,14 +34,11 @@ export class AnimalService {
     return this.animalRepository.getAll(filter, limit, page);
   }
 
-  create(data: Omit<AnimalEntity, 'id'>): Promise<AnimalEntity> {
+  create(data: Omit<AnimalEntity, 'id'>) {
     return this.animalRepository.create(data);
   }
 
-  update(
-    id: number,
-    data: Partial<Omit<AnimalEntity, 'id'>>,
-  ): Promise<AnimalEntity> {
+  update(id: number, data: Partial<Omit<AnimalEntity, 'id'>>) {
     return this.animalRepository.update(id, data);
   }
 
@@ -53,7 +50,7 @@ export class AnimalService {
     this.animalRepository.makeFavorite(id, userId);
   }
 
-  delete(id: number): Promise<boolean> {
+  delete(id: number) {
     return this.animalRepository.delete(id);
   }
 }

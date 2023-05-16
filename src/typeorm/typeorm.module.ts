@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 import {
   AnimalModel,
   CityModel,
@@ -29,6 +30,10 @@ import {
           PhotoModel,
         ],
       }),
+      dataSourceFactory: async (options) => {
+        const dataSource = await new DataSource(options).initialize();
+        return dataSource;
+      },
       inject: [ConfigService],
     }),
   ],
