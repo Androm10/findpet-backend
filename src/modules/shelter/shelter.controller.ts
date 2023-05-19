@@ -9,9 +9,11 @@ import {
   Post,
   Put,
   Query,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { NoAuth } from 'src/common/decorators/no-auth.decorator';
 import { UserRequest } from 'src/common/decorators/user.decorator';
@@ -94,6 +96,18 @@ export class ShelterController {
   @Put(':id')
   update(@Param('id') id: number, @Body() updateShelterDto: UpdateShelterDto) {
     return this.shelterService.update(id, updateShelterDto);
+  }
+
+  @ApiBearerAuth('JWT-auth')
+  @UseInterceptors(AnyFilesInterceptor())
+  @UseGuards(IsWorkerGuard)
+  @Put(':id/addPhotos')
+  addPhotos(
+    @UserRequest() user: UserFromRequest,
+    @Param('id') id: number,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    return this.shelterService.addPhotos(id, files);
   }
 
   @ApiBearerAuth('JWT-auth')

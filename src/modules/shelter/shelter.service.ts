@@ -3,12 +3,14 @@ import { SHELTER_REPOSITORY } from 'src/common/constants/tokens';
 import { ShelterEntity } from 'src/core/entities/shelter-entity';
 import { IShelterRepository } from 'src/core/interfaces/shelter-repository';
 import { Coords } from 'src/core/value-objects/coordinates.value-object';
+import { PhotoService } from '../photo/photo.service';
 
 @Injectable()
 export class ShelterService {
   constructor(
     @Inject(SHELTER_REPOSITORY)
     private shelterRepository: IShelterRepository,
+    private photoService: PhotoService,
   ) {}
 
   get(id: number): Promise<ShelterEntity> {
@@ -57,6 +59,24 @@ export class ShelterService {
 
   update(id: number, data: Partial<Omit<ShelterEntity, 'id'>>) {
     return this.shelterRepository.update(id, data);
+  }
+
+  async addPhotos(id: number, files: Express.Multer.File[]) {
+    if (
+      files.reduce(
+        (acc, file) => acc || !file.mimetype.includes('image'),
+        false,
+      )
+    ) {
+      throw new BadRequestException('All files must be images');
+    }
+
+    const shelter = await this.shelterRepository.get(id);
+    if (!shelter) {
+      throw new BadRequestException('No such shelter');
+    }
+
+    return this.photoService.addPhotosToShelter(files, shelter.id);
   }
 
   delete(id: number) {

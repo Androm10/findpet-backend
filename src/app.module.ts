@@ -6,6 +6,7 @@ import { redisStore } from 'cache-manager-redis-yet';
 import config from './config';
 import authConfig from './config/auth.config';
 import databaseConfig from './config/database.config';
+import minioConfig from './config/minio.config';
 import redisConfig from './config/redis.config';
 import throttlerConfig from './config/throttler.config';
 
@@ -16,7 +17,14 @@ import { AppTypeormModule } from './typeorm/typeorm.module';
   imports: [
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENVIRONMENT}.env`,
-      load: [config, databaseConfig, authConfig, throttlerConfig, redisConfig],
+      load: [
+        config,
+        databaseConfig,
+        authConfig,
+        throttlerConfig,
+        redisConfig,
+        minioConfig,
+      ],
       isGlobal: true,
     }),
     ThrottlerModule.forRootAsync({
