@@ -11,6 +11,28 @@ export class PhotoService {
     @Inject(PHOTO_REPOSITORY) private photoRepository: IPhotoRepository,
   ) {}
 
+  async updateUserAvatar(userId: number, file: Express.Multer.File) {
+    const name = await this.minioService.uploadFile(
+      file,
+      BucketNames.USER_BUCKET,
+    );
+    const url = `http://localhost:9000/${BucketNames.USER_BUCKET}/${name}`;
+    // await this.minioService.getFile(
+    //   name,
+    //   BucketNames.SHELTER_BUCKET,
+    // );
+
+    const uploadedPhotos = [
+      {
+        name: file.originalname,
+        url,
+        user: { id: userId },
+      },
+    ];
+
+    return this.photoRepository.bulkCreate(uploadedPhotos);
+  }
+
   //TODO: fix 2 requests
   async addPhotosToShelter(files: Express.Multer.File[], shelterId: number) {
     const uploadedPhotos = await Promise.all(

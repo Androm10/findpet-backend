@@ -53,7 +53,10 @@ export class UserRepository implements IUserRepository {
   }
 
   async get(id: number) {
-    const user = await this.userModel.findOne({ where: { id } });
+    const user = await this.userModel.findOne({
+      where: { id },
+      relations: { avatar: true },
+    });
     return new UserEntity(user);
   }
 

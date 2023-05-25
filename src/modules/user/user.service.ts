@@ -2,11 +2,13 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { USER_REPOSITORY } from 'src/common/constants/tokens';
 import { UserEntity } from 'src/core/entities/user-entity';
 import { IUserRepository } from 'src/core/interfaces/user-repository';
+import { PhotoService } from '../photo/photo.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject(USER_REPOSITORY) private userRepository: IUserRepository,
+    private photoService: PhotoService,
   ) {}
 
   get(id: number) {
@@ -23,6 +25,19 @@ export class UserService {
 
   update(id: number, data: Partial<Omit<UserEntity, 'id'>>) {
     return this.userRepository.update(id, data);
+  }
+
+  async updateAvatar(id: number, file: Express.Multer.File) {
+    if (!file.mimetype.includes('image')) {
+      throw new BadRequestException('File must be an image');
+    }
+
+    const user = await this.userRepository.get(id);
+    if (!user) {
+      throw new BadRequestException('No such user');
+    }
+
+    return this.photoService.updateUserAvatar(id, file);
   }
 
   delete(id: number) {

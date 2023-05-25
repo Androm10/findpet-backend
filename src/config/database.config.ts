@@ -1,5 +1,4 @@
 const e = process.env;
-console.log(e);
 
 export default () => ({
   database: {

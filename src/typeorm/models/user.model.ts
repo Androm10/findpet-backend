@@ -32,7 +32,7 @@ export class UserModel {
   @Column()
   username: string;
 
-  @OneToOne(() => PhotoModel)
+  @OneToOne(() => PhotoModel, (photo) => photo.user)
   @JoinColumn()
   avatar: PhotoModel;
 

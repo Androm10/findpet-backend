@@ -7,10 +7,16 @@ import {
   Post,
   Put,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { NoAuth } from 'src/common/decorators/no-auth.decorator';
+import { UserRequest } from 'src/common/decorators/user.decorator';
+import { UserFromRequest } from 'src/common/types/user-request';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateAvatarDto } from './dto/update-avatar.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 
@@ -18,6 +24,12 @@ import { UserService } from './user.service';
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
+
+  @ApiBearerAuth('JWT-auth')
+  @Get('profile')
+  getProfile(@UserRequest() user: UserFromRequest) {
+    return this.userService.get(user.id);
+  }
 
   @NoAuth()
   @Get(':id')
@@ -41,6 +53,18 @@ export class UserController {
   @Put(':id')
   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
+  }
+
+  @ApiBearerAuth('JWT-auth')
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('avatar'))
+  @Put('profile/avatar')
+  updateAvatar(
+    @UserRequest() user: UserFromRequest,
+    @Body() updateAvatarDto: UpdateAvatarDto,
+    @UploadedFile() avatar: Express.Multer.File,
+  ) {
+    return this.userService.updateAvatar(user.id, avatar);
   }
 
   @ApiBearerAuth('JWT-auth')

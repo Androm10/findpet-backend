@@ -45,7 +45,7 @@ services:
     ports:
       - '${MINIO_API_PORT}:${MINIO_API_PORT}'
       - '${MINIO_UI_PORT}:${MINIO_UI_PORT}'
-    command: 'minio server --console-address ":${MINIO_API_PORT}" /data'
+    command: 'minio server --console-address ":${MINIO_UI_PORT}" /data'
     volumes:
       - 'minio:/data'
 

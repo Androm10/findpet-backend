@@ -1,6 +1,13 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { AnimalModel } from './animal.model';
 import { ShelterModel } from './shelter.model';
+import { UserModel } from './user.model';
 
 @Entity()
 export class PhotoModel {
@@ -20,4 +27,7 @@ export class PhotoModel {
     nullable: true,
   })
   shelter: ShelterModel;
+
+  @OneToOne(() => UserModel, (user) => user.avatar, { nullable: true })
+  user: UserModel;
 }
