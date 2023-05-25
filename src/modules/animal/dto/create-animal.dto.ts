@@ -16,6 +16,9 @@ export class CreateAnimalDto {
   @IsString()
   type: string;
 
+  @IsString()
+  sex: string;
+
   @IsNumber()
   age: number;
 

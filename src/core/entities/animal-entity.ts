@@ -6,6 +6,7 @@ export class AnimalEntity extends Entity {
   description?: string;
   type: string;
   age: number;
+  sex: string;
   orphanageDate?: Date;
   shelterId?: number;
   userId?: number;

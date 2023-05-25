@@ -1,0 +1,42 @@
+version: '3.0'
+
+services:
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis:/data
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - /home/androm/mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: '${DB_NAME}'
+      MYSQL_PASSWORD: '${DB_PASS}'
+      MYSQL_ROOT_PASSWORD: '${DB_PASS}'
+  minio:
+    container_name: minio
+    image: docker.io/bitnami/minio:2022
+    env_file:
+      - .dev.env
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    ports:
+      - 9000:9000
+      - 9001:9001
+    command: minio server --console-address ":9001" /data
+    volumes:
+      - 'minio_data:/data'
+
+volumes:
+  mysql:
+  redis:
+  minio_data:
+    driver: local

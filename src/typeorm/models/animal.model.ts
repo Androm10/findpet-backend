@@ -26,6 +26,12 @@ export class AnimalModel {
   @Column()
   age: number;
 
+  @Column()
+  type: string;
+
+  @Column()
+  sex: string;
+
   @IsOptional()
   @Column({ nullable: true, type: 'date' })
   orphanageDate?: Date;

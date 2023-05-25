@@ -10,7 +10,7 @@ export class MinioService implements OnModuleInit {
 
   constructor(private configService: ConfigService) {
     this.minioClient = new Minio.Client({
-      endPoint: 'minio',
+      endPoint: 'localhost',
       port: +this.configService.get('minio.port'),
       useSSL: this.configService.get<boolean>('minio.useSSL'),
       accessKey: this.configService.get('minio.accessKey'),
@@ -24,9 +24,11 @@ export class MinioService implements OnModuleInit {
 
   async createBuckets(): Promise<void> {
     Object.keys(BucketNames).forEach(async (bucketName) => {
-      const bucketExists = await this.minioClient.bucketExists(bucketName);
+      const bucketExists = await this.minioClient.bucketExists(
+        BucketNames[bucketName],
+      );
       if (!bucketExists) {
-        await this.minioClient.makeBucket(bucketName, 'us-east-1');
+        await this.minioClient.makeBucket(BucketNames[bucketName], 'us-east-1');
       }
     });
   }

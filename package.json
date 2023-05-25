@@ -10,6 +10,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "npx cross-env NODE_ENVIRONMENT=dev nest start --watch",
+    "start:dev-local": "npx cross-env NODE_ENVIRONMENT=local nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "npx cross-env NODE_ENVIRONMENT=prod node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
