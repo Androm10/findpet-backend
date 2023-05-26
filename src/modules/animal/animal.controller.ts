@@ -9,16 +9,20 @@ import {
   Put,
   Query,
   Req,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AnyFilesInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { NoAuth } from 'src/common/decorators/no-auth.decorator';
 import { UserRequest } from 'src/common/decorators/user.decorator';
 import { UserFromRequest } from 'src/common/types/user-request';
 import { IsWorkerGuard } from '../auth/guards/is-worker.guard';
 import { AnimalService } from './animal.service';
+import { AddAnimalPhotosDto } from './dto/add-animal-photos.dto';
 import { CreateAnimalDto } from './dto/create-animal.dto';
+import { GetAnimalsDto } from './dto/get-animals.dto';
 import { UpdateAnimalDto } from './dto/update-animal.dto';
 
 @ApiTags('animal')
@@ -58,8 +62,8 @@ export class AnimalController {
   @UseInterceptors(CacheInterceptor)
   @NoAuth()
   @Get()
-  getAll(@Query('limit') limit: number, @Query('page') page: number) {
-    return this.animalService.getAll({}, limit, page);
+  getAll(@Query() { limit, page, ...filter }: GetAnimalsDto) {
+    return this.animalService.getAll(filter, limit, page);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -77,6 +81,19 @@ export class AnimalController {
   @Put(':id')
   update(@Param('id') id: number, @Body() updateAnimalDto: UpdateAnimalDto) {
     return this.animalService.update(id, updateAnimalDto);
+  }
+
+  @ApiBearerAuth('JWT-auth')
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(AnyFilesInterceptor())
+  @Put(':id/photos')
+  updateAvatar(
+    @UserRequest() user: UserFromRequest,
+    @Param('id') id: number,
+    @Body() addAnimalPhotosDto: AddAnimalPhotosDto,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    return this.animalService.addPhotos(id, files);
   }
 
   @ApiBearerAuth('JWT-auth')

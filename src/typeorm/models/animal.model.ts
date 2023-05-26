@@ -42,6 +42,9 @@ export class AnimalModel {
   })
   shelter: ShelterModel;
 
+  @Column({ nullable: true })
+  shelterId: number;
+
   @OneToMany(() => PhotoModel, (photo) => photo.animal, {
     nullable: true,
   })

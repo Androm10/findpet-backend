@@ -41,10 +41,11 @@ export class PhotoService {
           file,
           BucketNames.SHELTER_BUCKET,
         );
-        const url = await this.minioService.getFile(
-          name,
-          BucketNames.SHELTER_BUCKET,
-        );
+        const url = `http://localhost:9000/${BucketNames.SHELTER_BUCKET}/${name}`;
+        // await this.minioService.getFile(
+        //   name,
+        //   BucketNames.SHELTER_BUCKET,
+        // );
 
         return {
           name: file.originalname,
@@ -64,10 +65,11 @@ export class PhotoService {
           file,
           BucketNames.ANIMAL_BUCKET,
         );
-        const url = await this.minioService.getFile(
-          name,
-          BucketNames.ANIMAL_BUCKET,
-        );
+        const url = `http://localhost:9000/${BucketNames.ANIMAL_BUCKET}/${name}`;
+        // await this.minioService.getFile(
+        //   name,
+        //   BucketNames.ANIMAL_BUCKET,
+        // );
 
         return {
           name: file.originalname,

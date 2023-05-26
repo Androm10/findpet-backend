@@ -17,7 +17,12 @@ export class AnimalRepository implements IAnimalRepository {
   ) {}
 
   async get(id: number) {
-    const animal = await this.animalModel.findOne({ where: { id } });
+    const animal = await this.animalModel.findOne({
+      where: { id },
+      relations: {
+        photos: true,
+      },
+    });
     return new AnimalEntity(animal);
   }
 

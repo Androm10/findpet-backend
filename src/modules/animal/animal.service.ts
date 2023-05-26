@@ -7,6 +7,7 @@ import {
 import { ANIMAL_REPOSITORY } from 'src/common/constants/tokens';
 import { AnimalEntity } from 'src/core/entities/animal-entity';
 import { IAnimalRepository } from 'src/core/interfaces/animal-repository';
+import { Like } from 'typeorm';
 import { PhotoService } from '../photo/photo.service';
 
 @Injectable()
@@ -38,7 +39,30 @@ export class AnimalService {
   }
 
   getAll(filter?: any, limit?: number, page?: number) {
-    return this.animalRepository.getAll(filter, limit, page);
+    const where = {};
+    if (filter.name) {
+      where['name'] = Like(`%${filter.name}%`);
+    }
+
+    if (filter.type) {
+      where['type'] = filter.type;
+    }
+
+    if (filter.sex) {
+      where['sex'] = filter.sex;
+    }
+
+    return this.animalRepository.getAll(
+      {
+        where,
+
+        relations: {
+          photos: true,
+        },
+      },
+      limit,
+      page,
+    );
   }
 
   create(data: Omit<AnimalEntity, 'id'>) {
@@ -49,6 +73,7 @@ export class AnimalService {
     return this.animalRepository.update(id, data);
   }
 
+  //TODO: add validators for animal in shelter, foreign users
   async addPhotos(id: number, files: Express.Multer.File[]) {
     if (
       files.reduce(

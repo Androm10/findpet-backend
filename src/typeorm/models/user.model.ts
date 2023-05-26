@@ -49,6 +49,9 @@ export class UserModel {
   })
   shelter: ShelterModel;
 
+  @Column({ nullable: true })
+  shelterId: number;
+
   @JoinTable()
   @ManyToMany(() => AnimalModel, (animal) => animal.favoritedBy)
   favorites: AnimalModel[];

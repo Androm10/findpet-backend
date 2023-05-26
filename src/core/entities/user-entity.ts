@@ -5,6 +5,7 @@ export class UserEntity extends Entity {
   username: string;
   password: string;
   avatar?: any;
+  shelterId?: number;
 
   constructor(object: Partial<UserEntity>) {
     super();
