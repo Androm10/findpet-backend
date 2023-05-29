@@ -14,12 +14,13 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { NoAuth } from 'src/common/decorators/no-auth.decorator';
 import { UserRequest } from 'src/common/decorators/user.decorator';
 import { UserFromRequest } from 'src/common/types/user-request';
 import { Coords } from 'src/core/value-objects/coordinates.value-object';
 import { IsWorkerGuard } from '../auth/guards/is-worker.guard';
+import { AddShelterPhotosDto } from './dto/add-shelter-photos.dto';
 import { CreateShelterDto } from './dto/create-shelter.dto';
 import { UpdateShelterDto } from './dto/update-shelter.dto';
 import { ShelterService } from './shelter.service';
@@ -99,12 +100,14 @@ export class ShelterController {
   }
 
   @ApiBearerAuth('JWT-auth')
+  @ApiConsumes('multipart/form-data')
   @UseInterceptors(AnyFilesInterceptor())
   @UseGuards(IsWorkerGuard)
-  @Put(':id/addPhotos')
+  @Put(':id/photos')
   addPhotos(
     @UserRequest() user: UserFromRequest,
     @Param('id') id: number,
+    @Body() addAnimalPhotosDto: AddShelterPhotosDto,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
     return this.shelterService.addPhotos(id, files);

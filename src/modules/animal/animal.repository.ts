@@ -31,6 +31,9 @@ export class AnimalRepository implements IAnimalRepository {
 
     const [animals, count] = await this.animalModel.findAndCount({
       ...filter,
+      relations: {
+        photos: true,
+      },
       take,
       skip,
     });

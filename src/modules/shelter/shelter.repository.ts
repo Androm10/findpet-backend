@@ -19,7 +19,12 @@ export class ShelterRepository implements IShelterRepository {
   ) {}
 
   async get(id: number) {
-    const shelter = await this.shelterModel.findOne({ where: { id } });
+    const shelter = await this.shelterModel.findOne({
+      where: { id },
+      relations: {
+        photos: true,
+      },
+    });
     if (!shelter) return null;
     return new ShelterEntity({ ...shelter, coords: shelter.pointToCoords() });
   }
@@ -43,6 +48,9 @@ export class ShelterRepository implements IShelterRepository {
 
     const [shelters, count] = await this.shelterModel.findAndCount({
       ...filter,
+      relations: {
+        photos: true,
+      },
       take,
       skip,
     });

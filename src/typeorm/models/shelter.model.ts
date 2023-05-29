@@ -46,7 +46,7 @@ export class ShelterModel {
   @Column({ default: false })
   isVerified: boolean;
 
-  @ManyToOne(() => PhotoModel, (photo) => photo.shelter, { nullable: true })
+  @OneToMany(() => PhotoModel, (photo) => photo.shelter, { nullable: true })
   photos: PhotoModel[];
 
   @OneToMany(() => AnimalModel, (animal) => animal.shelter)
