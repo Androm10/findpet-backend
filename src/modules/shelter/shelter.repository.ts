@@ -32,7 +32,7 @@ export class ShelterRepository implements IShelterRepository {
   async getWorkers(id: number) {
     const shelter = await this.shelterModel.findOne({
       where: { id },
-      relations: { workers: true },
+      relations: ['workers', 'workers.avatar'],
     });
     if (!shelter) {
       throw new RepositoryError('No such shelter');

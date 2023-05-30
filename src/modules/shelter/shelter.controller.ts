@@ -21,6 +21,7 @@ import { UserFromRequest } from 'src/common/types/user-request';
 import { Coords } from 'src/core/value-objects/coordinates.value-object';
 import { IsWorkerGuard } from '../auth/guards/is-worker.guard';
 import { AddShelterPhotosDto } from './dto/add-shelter-photos.dto';
+import { AddWorkerDto } from './dto/add-worker.dto';
 import { CreateShelterDto } from './dto/create-shelter.dto';
 import { UpdateShelterDto } from './dto/update-shelter.dto';
 import { ShelterService } from './shelter.service';
@@ -88,9 +89,9 @@ export class ShelterController {
 
   @ApiBearerAuth('JWT-auth')
   @UseGuards(IsWorkerGuard)
-  @Patch(':id/addWorker/:workerId')
-  addWorker(@Param('id') id: number, @Param('workerId') workerId: number) {
-    return this.shelterService.addWorker(id, workerId);
+  @Patch(':id/addWorker')
+  addWorker(@Param('id') id: number, @Body() addWorkerDto: AddWorkerDto) {
+    return this.shelterService.addWorker(id, addWorkerDto.email);
   }
 
   @ApiBearerAuth('JWT-auth')

@@ -4,6 +4,7 @@ import { ShelterEntity } from 'src/core/entities/shelter-entity';
 import { IShelterRepository } from 'src/core/interfaces/shelter-repository';
 import { Coords } from 'src/core/value-objects/coordinates.value-object';
 import { PhotoService } from '../photo/photo.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ShelterService {
@@ -11,6 +12,7 @@ export class ShelterService {
     @Inject(SHELTER_REPOSITORY)
     private shelterRepository: IShelterRepository,
     private photoService: PhotoService,
+    private userService: UserService,
   ) {}
 
   get(id: number): Promise<ShelterEntity> {
@@ -47,14 +49,24 @@ export class ShelterService {
     return this.shelterRepository.create(data, creatorId);
   }
 
-  async addWorker(id: number, workerId: number) {
+  async addWorker(id: number, workerEmail: string) {
     const shelter = await this.get(id);
 
     if (!shelter) {
       throw new BadRequestException('No such shelter');
     }
 
-    return this.shelterRepository.addWorker(id, workerId);
+    const user = await this.userService.getByLogin(workerEmail);
+
+    if (!user) {
+      throw new BadRequestException('No such worker');
+    }
+
+    if (user.shelterId) {
+      throw new BadRequestException('User already a worker');
+    }
+
+    return this.shelterRepository.addWorker(id, user.id);
   }
 
   update(id: number, data: Partial<Omit<ShelterEntity, 'id'>>) {
