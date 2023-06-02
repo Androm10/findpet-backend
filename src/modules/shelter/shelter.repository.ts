@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository as TypeOrmRepository } from 'typeorm';
+import { DataSource, In, Repository as TypeOrmRepository } from 'typeorm';
 import { ShelterModel } from 'src/typeorm/models/shelter.model';
 import { ShelterEntity } from 'src/core/entities/shelter-entity';
 import { calculatePagination } from 'src/common/utils/calculatePagination';
 import { IShelterRepository } from 'src/core/interfaces/shelter-repository';
-import { UserModel } from 'src/typeorm/models';
+import { PhotoModel, UserModel } from 'src/typeorm/models';
 import { RepositoryError } from 'src/common/types/repository-error';
 import { Coords } from 'src/core/value-objects/coordinates.value-object';
 import { UserEntity } from 'src/core/entities/user-entity';
@@ -15,6 +15,8 @@ export class ShelterRepository implements IShelterRepository {
   constructor(
     @InjectRepository(ShelterModel)
     private shelterModel: TypeOrmRepository<ShelterModel>,
+    @InjectRepository(PhotoModel)
+    private photoModel: TypeOrmRepository<PhotoModel>,
     private dataSource: DataSource,
   ) {}
 
@@ -85,9 +87,25 @@ export class ShelterRepository implements IShelterRepository {
 
     console.log(shelters, count);
 
+    const photos = await this.photoModel.find({
+      where: {
+        shelter: {
+          id: In(shelters.map((s) => s.id)),
+        },
+      },
+      relations: {
+        shelter: true,
+      },
+    });
+
     return {
       result: shelters.map(
-        (s) => new ShelterEntity({ ...s, coords: s.pointToCoords() }),
+        (s) =>
+          new ShelterEntity({
+            ...s,
+            coords: s.pointToCoords(),
+            photos: photos.filter((p) => p.shelter.id == s.id),
+          }),
       ),
       limit: take,
       page: page,
