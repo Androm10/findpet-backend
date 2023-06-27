@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MESSAGE_REPOSITORY } from 'src/common/constants/tokens';
-import { ChatModel } from 'src/typeorm/models/chat.model';
 import { MessageModel } from 'src/typeorm/models/message.model';
 import { MessageRepository } from './message.repository';
 import { MessageService } from './message.service';
@@ -17,4 +16,4 @@ import { MessageService } from './message.service';
   ],
   exports: [MessageService],
 })
-export class ChatModule {}
+export class MessageModule {}

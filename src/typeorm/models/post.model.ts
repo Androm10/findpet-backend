@@ -1,17 +1,16 @@
 import {
+  BeforeInsert,
   Column,
   Entity,
   JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AnimalModel } from './animal.model';
 import { PhotoModel } from './photo.model';
 import { ShelterModel } from './shelter.model';
-import { UserModel } from './user.model';
 
 @Entity()
 export class PostModel {
@@ -24,6 +23,15 @@ export class PostModel {
   @Column()
   text: string;
 
+  @Column({ type: Date, nullable: true })
+  publishDate: Date | null;
+
+  @Column({ type: Date })
+  creationDate: Date;
+
+  @Column()
+  isEdited: boolean;
+
   shelterId: number;
 
   @ManyToOne(() => ShelterModel, (shelter) => shelter.posts)
@@ -35,4 +43,9 @@ export class PostModel {
   @JoinTable()
   @ManyToMany(() => AnimalModel, (animal) => animal.posts)
   animals?: AnimalModel[];
+
+  @BeforeInsert()
+  onCreate() {
+    this.creationDate = new Date();
+  }
 }

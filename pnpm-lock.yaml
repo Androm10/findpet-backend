@@ -25,6 +25,9 @@ dependencies:
   '@nestjs/platform-socket.io':
     specifier: ^10.0.2
     version: 10.0.2(@nestjs/common@9.0.0)(@nestjs/websockets@10.0.2)(rxjs@7.2.0)
+  '@nestjs/schedule':
+    specifier: ^3.0.1
+    version: 3.0.1(@nestjs/common@9.0.0)(@nestjs/core@9.0.0)(reflect-metadata@0.1.13)
   '@nestjs/sequelize':
     specifier: ^9.0.2
     version: 9.0.2(@nestjs/common@9.0.0)(@nestjs/core@9.0.0)(reflect-metadata@0.1.13)(rxjs@7.2.0)(sequelize-typescript@2.1.5)(sequelize@6.31.0)
@@ -124,6 +127,9 @@ devDependencies:
     specifier: ^4.0.2
     version: 4.0.2
   '@types/cache-manager-redis-store':
+    specifier: ^2.0.1
+    version: 2.0.1
+  '@types/cron':
     specifier: ^2.0.1
     version: 2.0.1
   '@types/express':
@@ -1113,6 +1119,20 @@ packages:
       - supports-color
       - utf-8-validate
 
+  /@nestjs/schedule@3.0.1(@nestjs/common@9.0.0)(@nestjs/core@9.0.0)(reflect-metadata@0.1.13):
+    resolution: {integrity: sha512-4CAFu4rE/QPYnz/icRg3GiuLmY1bXopG8bWTJ9d7bXzaHBaPKIjGvZ20wsK8P+MncrVCkmK0iYhQrNj0cwX9+A==}
+    peerDependencies:
+      '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0
+      '@nestjs/core': ^8.0.0 || ^9.0.0 || ^10.0.0
+      reflect-metadata: ^0.1.12
+    dependencies:
+      '@nestjs/common': 9.0.0(cache-manager@4.0.0)(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)(rxjs@7.2.0)
+      '@nestjs/core': 9.0.0(@nestjs/common@9.0.0)(@nestjs/platform-express@9.0.0)(@nestjs/websockets@10.0.2)(reflect-metadata@0.1.13)(rxjs@7.2.0)
+      cron: 2.3.1
+      reflect-metadata: 0.1.13
+      uuid: 9.0.0
+    dev: false
+
   /@nestjs/schematics@9.0.0(chokidar@3.5.3)(typescript@4.7.4):
     resolution: {integrity: sha512-l4AReqX597iKyAXVN9WsrLQ1NDY0G15s7x8dHpwM0+3MOFoEKZMvqeiFrfVMqbwuMiTvXTuLcoMdlKuz7qtrDg==}
     peerDependencies:
@@ -1443,6 +1463,13 @@ packages:
     dependencies:
       '@types/node': 18.15.11
 
+  /@types/cron@2.0.1:
+    resolution: {integrity: sha512-WHa/1rtNtD2Q/H0+YTTZoty+/5rcE66iAFX2IY+JuUoOACsevYyFkSYu/2vdw+G5LrmO7Lxowrqm0av4k3qWNQ==}
+    dependencies:
+      '@types/luxon': 3.3.0
+      '@types/node': 18.15.11
+    dev: true
+
   /@types/debug@4.1.7:
     resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
     dependencies:
@@ -1528,6 +1555,10 @@ packages:
 
   /@types/lodash@4.14.194:
     resolution: {integrity: sha512-r22s9tAS7imvBt2lyHC9B8AGwWnXaYb1tY09oyLkXDs4vArpYJzw09nj8MLx5VfciBPGIb+ZwG0ssYnEPJxn/g==}
+    dev: true
+
+  /@types/luxon@3.3.0:
+    resolution: {integrity: sha512-uKRI5QORDnrGFYgcdAVnHvEIvEZ8noTpP/Bg+HeUzZghwinDlIS87DEenV5r1YoOF9G4x600YsUXLWZ19rmTmg==}
     dev: true
 
   /@types/mime@3.0.1:
@@ -2720,6 +2751,12 @@ packages:
 
   /create-require@1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
+
+  /cron@2.3.1:
+    resolution: {integrity: sha512-1eRRlIT0UfIqauwbG9pkg3J6CX9A6My2ytJWqAXoK0T9oJnUZTzGBNPxao0zjodIbPgf8UQWjE62BMb9eVllSQ==}
+    dependencies:
+      luxon: 3.3.0
+    dev: false
 
   /cross-env@7.0.3:
     resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
@@ -4602,6 +4639,11 @@ packages:
   /lru-cache@9.1.1:
     resolution: {integrity: sha512-65/Jky17UwSb0BuB9V+MyDpsOtXKmYwzhyl+cOa9XUiI4uV2Ouy/2voFP3+al0BjZbJgMBD8FojMpAf+Z+qn4A==}
     engines: {node: 14 || >=16.14}
+    dev: false
+
+  /luxon@3.3.0:
+    resolution: {integrity: sha512-An0UCfG/rSiqtAIiBPO0Y9/zAnHUZxAMiCpTd5h2smgsj7GGmcenvrvww2cqNA8/4A5ZrD1gJpHN2mIHZQF+Mg==}
+    engines: {node: '>=12'}
     dev: false
 
   /macos-release@2.5.1:

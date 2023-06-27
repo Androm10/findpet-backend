@@ -33,6 +33,27 @@ export class PhotoService {
     return this.photoRepository.bulkCreate(uploadedPhotos);
   }
 
+  async addPhotos(
+    files: Express.Multer.File[],
+    id: number,
+    entityName: BucketNames,
+  ) {
+    const uploadedPhotos = await Promise.all(
+      files.map(async (file) => {
+        const name = await this.minioService.uploadFile(file, entityName);
+        const url = `http://localhost:9000/${entityName}/${name}`;
+
+        return {
+          name: file.originalname,
+          url,
+          [entityName]: { id },
+        };
+      }),
+    );
+
+    return this.photoRepository.bulkCreate(uploadedPhotos);
+  }
+
   //TODO: fix 2 requests
   async addPhotosToShelter(files: Express.Multer.File[], shelterId: number) {
     const uploadedPhotos = await Promise.all(
@@ -66,10 +87,6 @@ export class PhotoService {
           BucketNames.ANIMAL_BUCKET,
         );
         const url = `http://localhost:9000/${BucketNames.ANIMAL_BUCKET}/${name}`;
-        // await this.minioService.getFile(
-        //   name,
-        //   BucketNames.ANIMAL_BUCKET,
-        // );
 
         return {
           name: file.originalname,
