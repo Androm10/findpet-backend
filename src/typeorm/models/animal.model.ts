@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { PhotoModel } from './photo.model';
+import { PostModel } from './post.model';
 import { ShelterModel } from './shelter.model';
 import { UserModel } from './user.model';
 
@@ -54,6 +55,9 @@ export class AnimalModel {
     nullable: true,
   })
   user?: UserModel;
+
+  @ManyToMany(() => PostModel, (post) => post.animals)
+  posts?: PostModel[];
 
   @ManyToMany(() => UserModel, (user) => user.favorites)
   favoritedBy: UserModel[];

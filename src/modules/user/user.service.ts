@@ -3,6 +3,7 @@ import { USER_REPOSITORY } from 'src/common/constants/tokens';
 import { UserEntity } from 'src/core/entities/user-entity';
 import { IUserRepository } from 'src/core/interfaces/user-repository';
 import { PhotoService } from '../photo/photo.service';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UserService {
@@ -19,8 +20,14 @@ export class UserService {
     return this.userRepository.getAll(filter, limit, page);
   }
 
-  create(data: Omit<UserEntity, 'id'>) {
-    return this.userRepository.create(data);
+  create(data: CreateUserDto) {
+    const user = {
+      ...data,
+      isOnline: false,
+      lastOnlineDate: new Date(),
+    };
+
+    return this.userRepository.create(user);
   }
 
   update(id: number, data: Partial<Omit<UserEntity, 'id'>>) {
@@ -53,7 +60,13 @@ export class UserService {
     password: string;
     username: string;
   }) {
-    const user = await this.userRepository.create(data);
+    const userData = {
+      ...data,
+      isOnline: false,
+      lastOnlineDate: new Date(),
+    };
+
+    const user = await this.userRepository.create(userData);
     if (!user) {
       throw new BadRequestException('Cannot create user');
     }

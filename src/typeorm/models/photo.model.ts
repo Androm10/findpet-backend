@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AnimalModel } from './animal.model';
+import { PostModel } from './post.model';
 import { ShelterModel } from './shelter.model';
 import { UserModel } from './user.model';
 
@@ -27,6 +28,11 @@ export class PhotoModel {
     nullable: true,
   })
   shelter: ShelterModel;
+
+  @ManyToOne(() => PostModel, (post) => post.photos, {
+    nullable: true,
+  })
+  post: PostModel;
 
   @OneToOne(() => UserModel, (user) => user.avatar, { nullable: true })
   user: UserModel;

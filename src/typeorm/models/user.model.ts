@@ -16,6 +16,8 @@ import { IsEmail, IsOptional } from 'class-validator';
 import { AnimalModel } from './animal.model';
 import { ShelterModel } from './shelter.model';
 import { PhotoModel } from './photo.model';
+import { ChatModel } from './chat.model';
+import { MessageModel } from './message.model';
 
 @Entity()
 export class UserModel {
@@ -32,6 +34,12 @@ export class UserModel {
   @Column()
   username: string;
 
+  @Column()
+  isOnline: boolean;
+
+  @Column({ type: 'date' })
+  lastOnlineDate: Date;
+
   @OneToOne(() => PhotoModel, (photo) => photo.user)
   @JoinColumn()
   avatar: PhotoModel;
@@ -39,6 +47,13 @@ export class UserModel {
   @JoinTable()
   @ManyToMany(() => RoleModel, (role) => role.name)
   roles: RoleModel[];
+
+  @JoinTable()
+  @ManyToMany(() => ChatModel, (chat) => chat.users)
+  chats: ChatModel[];
+
+  @OneToMany(() => MessageModel, (message) => message.user)
+  messages: MessageModel[];
 
   @OneToMany(() => AnimalModel, (animal) => animal.user)
   animals: AnimalModel[];

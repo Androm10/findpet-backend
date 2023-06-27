@@ -11,6 +11,7 @@ import {
 import { AnimalModel } from './animal.model';
 import { CityModel } from './city.model';
 import { PhotoModel } from './photo.model';
+import { PostModel } from './post.model';
 import { UserModel } from './user.model';
 
 @Entity()
@@ -57,6 +58,9 @@ export class ShelterModel {
 
   @OneToMany(() => UserModel, (user) => user.shelter, { cascade: false })
   workers: UserModel[];
+
+  @OneToMany(() => PostModel, (post) => post.shelter, { cascade: false })
+  posts: PostModel[];
 
   pointToCoords() {
     const spaceIndex = this.coords.indexOf(' ');

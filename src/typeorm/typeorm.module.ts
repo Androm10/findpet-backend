@@ -11,6 +11,9 @@ import {
   ShelterModel,
   UserModel,
 } from './models';
+import { ChatModel } from './models/chat.model';
+import { MessageModel } from './models/message.model';
+import { PostModel } from './models/post.model';
 
 @Module({
   imports: [
@@ -28,6 +31,9 @@ import {
           ShelterModel,
           UserModel,
           PhotoModel,
+          ChatModel,
+          MessageModel,
+          PostModel,
         ],
       }),
       dataSourceFactory: async (options) => {

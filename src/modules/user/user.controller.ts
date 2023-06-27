@@ -50,6 +50,15 @@ export class UserController {
   }
 
   @ApiBearerAuth('JWT-auth')
+  @Put('profile')
+  updateProfile(
+    @UserRequest() user: UserFromRequest,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.update(user.id, updateUserDto);
+  }
+
+  @ApiBearerAuth('JWT-auth')
   @Put(':id')
   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);

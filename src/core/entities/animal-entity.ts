@@ -1,5 +1,4 @@
-import { ObjectId } from 'typeorm';
-import { Entity } from './entity';
+import { Entity, ObjectId } from './entity';
 
 export class AnimalEntity extends Entity {
   name: string;
@@ -8,8 +7,8 @@ export class AnimalEntity extends Entity {
   age: number;
   sex: string;
   orphanageDate?: Date;
-  shelterId?: number;
-  userId?: number;
+  shelterId?: ObjectId;
+  userId?: ObjectId;
 
   constructor(object: Partial<AnimalEntity>) {
     super();
