@@ -51,17 +51,14 @@ export class SocketService {
       throw new WsException('Cannot find user with such id');
     }
 
-    const chat = await this.chatService.get(chatId);
-    if (!chat || !chat.users.find((user) => user.id === userId)) {
+    const chat = await this.chatService.get(chatId, userId);
+    if (!chat) {
       throw new WsException('No such chat');
     }
 
     const msg = await this.messageService.create({ text, chatId, userId });
 
-    server.to(chatId.toString()).emit('NEW_MESSAGE', {
-      chatId,
-      message: msg,
-    });
+    server.to(chatId.toString()).emit('NEW_MESSAGE', msg);
   }
 
   async startChat(data: StartChatDto, server: Server) {
@@ -89,12 +86,10 @@ export class SocketService {
     const otherClient = this.users.get(userId);
     if (otherClient) {
       otherClient.join(String(chat.id));
+      otherClient.emit('NEW_CHAT', chat);
     }
 
-    server.to(String(chat.id)).emit('NEW_MESSAGE', {
-      chatId: chat.id,
-      message,
-    });
+    server.to(String(chat.id)).emit('NEW_MESSAGE', message);
   }
 
   disconnectUser(client: Socket) {

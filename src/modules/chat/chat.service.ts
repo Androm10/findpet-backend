@@ -11,8 +11,12 @@ export class ChatService {
     @Inject(CHAT_REPOSITORY) private chatRepository: IChatRepository,
   ) {}
 
-  async get(id: number) {
-    return this.chatRepository.get(id);
+  async get(id: number, userId: number) {
+    const chat = await this.chatRepository.get(id);
+    if (!chat.users.find((u) => u.id == userId)) {
+      return null;
+    }
+    return chat;
   }
 
   async getAll(filter: any, limit: number, page: number) {
