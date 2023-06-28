@@ -5,16 +5,9 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { BucketNames } from 'src/common/constants/buckets';
-import {
-  POST_REPOSITORY,
-  SHELTER_REPOSITORY,
-} from 'src/common/constants/tokens';
+import { POST_REPOSITORY } from 'src/common/constants/tokens';
 import { AnimalEntity } from 'src/core/entities/animal-entity';
-import { PostEntity } from 'src/core/entities/post-entity';
-import { ShelterEntity } from 'src/core/entities/shelter-entity';
 import { IPostRepository } from 'src/core/interfaces/post-repository';
-import { IShelterRepository } from 'src/core/interfaces/shelter-repository';
-import { Coords } from 'src/core/value-objects/coordinates.value-object';
 import { PhotoService } from '../photo/photo.service';
 import { ShelterService } from '../shelter/shelter.service';
 import { UserService } from '../user/user.service';

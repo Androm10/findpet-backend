@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository as TypeOrmRepository } from 'typeorm';
+import { In, Repository as TypeOrmRepository } from 'typeorm';
 import { PhotoEntity } from 'src/core/entities/photo.entity';
 import { IPhotoRepository } from 'src/core/interfaces/photo-repository';
-import { Paginated } from 'src/core/interfaces/repository';
 import { PhotoModel } from 'src/typeorm/models';
+import { calculatePagination } from 'src/common/utils/calculatePagination';
 
 @Injectable()
 export class PhotoRepository implements IPhotoRepository {
@@ -20,29 +20,53 @@ export class PhotoRepository implements IPhotoRepository {
     return saved.map((c) => new PhotoEntity(c));
   }
 
-  bulkDelete(data: number[]): Promise<boolean[]> {
-    throw new Error('Method not implemented.');
+  async create(data: Omit<PhotoEntity, 'id'>) {
+    const createdPhotos = this.photoModel.create(data);
+    const saved = await this.photoModel.save(createdPhotos);
+
+    return new PhotoEntity(saved);
   }
-  get(id: number): Promise<PhotoEntity> {
-    throw new Error('Method not implemented.');
+
+  async get(id: number) {
+    const photo = await this.photoModel.findOne({ where: { id } });
+    return new PhotoEntity(photo);
   }
-  getAll(
-    filter: any,
-    limit?: number,
-    page?: number,
-  ): Promise<Paginated<PhotoEntity>> {
-    throw new Error('Method not implemented.');
+
+  async getAll(filter: any, limit?: number, page?: number) {
+    const { take, skip } = calculatePagination(limit, page);
+
+    const [photos, count] = await this.photoModel.findAndCount({
+      ...filter,
+      take,
+      skip,
+    });
+
+    const result = {
+      result: photos.map((a) => new PhotoEntity(a)),
+      limit: take,
+      page: page,
+      pages: Math.ceil(count / take),
+      count,
+    };
+
+    return result;
   }
-  create(data: Omit<PhotoEntity, 'id'>): Promise<PhotoEntity> {
-    throw new Error('Method not implemented.');
+
+  async update(id: number, data: Partial<Omit<PhotoEntity, 'id'>>) {
+    const updated = await this.photoModel.update({ id }, data);
+    return new PhotoEntity({ ...data, id });
   }
-  update(
-    id: number,
-    data: Partial<Omit<PhotoEntity, 'id'>>,
-  ): Promise<PhotoEntity> {
-    throw new Error('Method not implemented.');
+
+  async delete(id: number) {
+    await this.photoModel.delete({ id });
+    return true;
   }
-  delete(id: number): Promise<boolean> {
-    throw new Error('Method not implemented.');
+
+  async bulkDelete(data: number[]) {
+    await this.photoModel.delete({
+      id: In(data),
+    });
+
+    return true;
   }
 }

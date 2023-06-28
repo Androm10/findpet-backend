@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Not, Repository as TypeOrmRepository } from 'typeorm';
+import { In, Like, Not, Repository as TypeOrmRepository } from 'typeorm';
 import { PostEntity } from 'src/core/entities/post-entity';
 import { IPostRepository } from 'src/core/interfaces/post-repository';
 import { Paginated } from 'src/core/interfaces/repository';
@@ -36,17 +36,34 @@ export class PostRepository implements IPostRepository {
   async getAll(filter: any, limit?: number, page?: number) {
     const { take, skip } = calculatePagination(limit, page);
 
-    const where = {
-      ...filter?.where,
+    const where: any = {
       publishDate: Not(null),
     };
 
+    if (filter.animals && filter.animals.length) {
+      where.animals = {
+        id: In(where.animals),
+      };
+    }
+
+    if (filter.name) {
+      where.name = Like(`%${filter.name}%`);
+    }
+
+    if (filter.text) {
+      where.text = Like(`%${filter.text}%`);
+    }
+
+    if (filter.shelterId) {
+      where.shelterId = filter.shelterId;
+    }
+
     const [posts, count] = await this.postModel.findAndCount({
-      ...filter,
       where,
       relations: {
         photos: true,
         shelter: true,
+        animals: true,
       },
       take,
       skip,

@@ -4,6 +4,8 @@ import * as uuid from 'uuid';
 import * as Minio from 'minio';
 import { BucketNames } from 'src/common/constants/buckets';
 
+//TODO: use presigned put url to load files
+
 @Injectable()
 export class MinioService implements OnModuleInit {
   private minioClient: Minio.Client;

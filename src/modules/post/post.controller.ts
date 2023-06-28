@@ -19,6 +19,7 @@ import { UserFromRequest } from 'src/common/types/user-request';
 import { IsWorkerGuard } from '../auth/guards/is-worker.guard';
 import { AddPostsPhotosDto } from './dto/add-post-photos.dto';
 import { CreatePostDto } from './dto/create-post.dto';
+import { GetPostsDto } from './dto/get-posts.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostService } from './post.service';
 
@@ -34,8 +35,8 @@ export class PostController {
 
   @NoAuth()
   @Get()
-  getAll(@Query('limit') limit: number, @Query('page') page: number) {
-    return this.postService.getAll({}, limit, page);
+  getAll(@Query() { limit, page, ...filter }: GetPostsDto) {
+    return this.postService.getAll(filter, limit, page);
   }
 
   @UseGuards(IsWorkerGuard)

@@ -47,6 +47,7 @@ export class AuthController {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   async google() {}
 
+  //TODO: use sockets?
   @UseGuards(GoogleOAuth2Guard)
   @Get('/google-callback')
   async googleAuthCallback(@Req() req, @Res() res: Response) {
