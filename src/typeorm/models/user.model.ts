@@ -37,7 +37,7 @@ export class UserModel {
   @Column()
   isOnline: boolean;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', default: '1970-01-02' })
   lastOnlineDate: Date;
 
   @OneToOne(() => PhotoModel, (photo) => photo.user)

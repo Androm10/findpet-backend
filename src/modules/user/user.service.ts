@@ -47,6 +47,21 @@ export class UserService {
     return this.photoService.updateUserAvatar(id, file);
   }
 
+  async updateAvatarExternal(id: number, url: string) {
+    const user = await this.userRepository.get(id);
+    if (!user) {
+      throw new BadRequestException('No such user');
+    }
+
+    const photo = {
+      url,
+      name: 'external',
+      user: { id } as UserEntity,
+    };
+
+    return this.photoService.create(photo);
+  }
+
   delete(id: number) {
     return this.userRepository.delete(id);
   }

@@ -1,6 +1,10 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { BucketNames } from 'src/common/constants/buckets';
 import { PHOTO_REPOSITORY } from 'src/common/constants/tokens';
+import { AnimalEntity } from 'src/core/entities/animal-entity';
+import { PhotoEntity } from 'src/core/entities/photo.entity';
+import { ShelterEntity } from 'src/core/entities/shelter-entity';
+import { UserEntity } from 'src/core/entities/user-entity';
 import { IPhotoRepository } from 'src/core/interfaces/photo-repository';
 import { MinioService } from '../minio/minio.service';
 
@@ -22,7 +26,7 @@ export class PhotoService {
       {
         name: file.originalname,
         url,
-        user: { id: userId },
+        user: { id: userId } as UserEntity,
       },
     ];
 
@@ -67,7 +71,7 @@ export class PhotoService {
         return {
           name: file.originalname,
           url,
-          shelter: { id: shelterId },
+          shelter: { id: shelterId } as ShelterEntity,
         };
       }),
     );
@@ -87,7 +91,7 @@ export class PhotoService {
         return {
           name: file.originalname,
           url,
-          animal: { id: animalId },
+          animal: { id: animalId } as AnimalEntity,
         };
       }),
     );
@@ -113,6 +117,10 @@ export class PhotoService {
       name: newName,
       url: newUrl,
     });
+  }
+
+  async create(data: Omit<PhotoEntity, 'id'>) {
+    return this.photoRepository.create(data);
   }
 
   async deletePhoto(photoId: number) {

@@ -54,6 +54,8 @@ export class AuthController {
     const user = req.user as GoogleUser;
     const token = await this.authService.loginGoogleAuth(user);
     // res.set('authorization', token.accessToken);
-    return res.redirect(`http://localhost:3001/login?auth=${token}`);
+    return res.redirect(
+      `http://localhost:5173/login?auth=${token.accessToken}&refresh=${token.refreshToken}`,
+    );
   }
 }

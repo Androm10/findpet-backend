@@ -1,4 +1,7 @@
+import { AnimalEntity } from './animal-entity';
 import { Entity } from './entity';
+import { ShelterEntity } from './shelter-entity';
+import { UserEntity } from './user-entity';
 
 export class PhotoEntity extends Entity {
   name: string;

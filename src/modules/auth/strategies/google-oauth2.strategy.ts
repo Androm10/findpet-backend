@@ -23,13 +23,13 @@ export class GoogleOAuth2Strategy extends PassportStrategy(Strategy, 'google') {
     refreshToken: string,
     profile: Profile,
   ): Promise<any> {
-    const { id, name, emails } = profile;
-
+    const { id, name, emails, photos } = profile;
     const user = {
       provider: 'google',
       providerId: id,
       email: emails[0].value,
       name: `${name.givenName} ${name.familyName}`,
+      avatarUrl: photos && photos.length ? photos[0].value : '',
     };
 
     return user;
@@ -41,4 +41,5 @@ export interface GoogleUser {
   providerId: string;
   email: 'string';
   name: string;
+  avatarUrl: string;
 }

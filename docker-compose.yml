@@ -11,7 +11,8 @@ services:
       - .:/app
     ports:
       - '${PORT}:${PORT}'
-    command: pnpm run start:dev
+      - 8082:8082
+    command: npm run start:dev
     depends_on:
       - mysql
     restart: always
@@ -23,6 +24,12 @@ services:
       - 3306:3306
     volumes:
       - mysqldb:/var/lib/mysql
+    command:
+      [
+        'mysqld',
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci',
+      ]
     environment:
       MYSQL_DATABASE: '${DB_NAME}'
       MYSQL_PASSWORD: '${DB_PASS}'

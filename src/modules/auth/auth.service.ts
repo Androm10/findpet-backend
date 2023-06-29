@@ -48,6 +48,7 @@ export class AuthService {
     let found = await this.userService.getByLogin(user.email);
 
     if (!found) {
+      console.log(user);
       // TODO: generate random password for google user
       found = await this.signup({
         login: user.email,
@@ -55,6 +56,8 @@ export class AuthService {
         confirmPassword: user.email,
         username: user.name,
       });
+
+      this.userService.updateAvatarExternal(found.id, user.avatarUrl);
     }
 
     const { accessToken, refreshToken } = await this.generateTokens(found.id);

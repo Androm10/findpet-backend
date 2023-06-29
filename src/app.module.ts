@@ -1,4 +1,5 @@
-import { CacheModule, CacheStore, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { CacheModule, CacheStore } from '@nestjs/cache-manager';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { redisStore } from 'cache-manager-redis-yet';

@@ -18,7 +18,7 @@ export class PhotoModel {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: '2083' })
   url: string;
 
   @ManyToOne(() => AnimalModel, (animal) => animal.photos, { nullable: true })

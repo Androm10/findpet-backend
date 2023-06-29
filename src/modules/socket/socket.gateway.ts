@@ -12,23 +12,27 @@ import { SendMessageDto } from './dto/send-message.dto';
 
 import { SocketService } from './socket.service';
 
-@WebSocketGateway(8080, { namespace: 'chat', cors: { origin: '*' } })
+@WebSocketGateway(8082, {
+  cors: { origin: '*' },
+})
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private socketService: SocketService) {}
 
   @WebSocketServer() server: Server;
 
   handleConnection(@ConnectedSocket() client: Socket, ...args: any[]) {
-    const token = client.handshake.headers.authorization;
-    if (!token) {
-      client.disconnect();
-    }
-    try {
-      const [, parsed] = token.split(' ');
-      this.socketService.initializeUser(client, parsed);
-    } catch (error) {
-      client.disconnect();
-    }
+    console.log('connect', client.id);
+    // const token = client.handshake.headers.authorization;
+    // console.log('connection', token);
+    // if (!token) {
+    //   client.disconnect();
+    // }
+    // try {
+    //   const [, parsed] = token.split(' ');
+    //   this.socketService.initializeUser(client, parsed);
+    // } catch (error) {
+    //   client.disconnect();
+    // }
   }
 
   @SubscribeMessage('SEND_MESSAGE')

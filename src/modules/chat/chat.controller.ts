@@ -19,6 +19,11 @@ import { CreateChatDto } from './dto/create-chat.dto';
 export class ChatController {
   constructor(private chatService: ChatService) {}
 
+  @Get('userChats')
+  getUserChats(@UserRequest() user: UserFromRequest) {
+    return this.chatService.getUserChats(user.id);
+  }
+
   @Get(':id')
   get(@Param('id') id: number, @UserRequest() user: UserFromRequest) {
     return this.chatService.get(id, user.id);
@@ -37,9 +42,4 @@ export class ChatController {
   //   createChatDto.users.push(user.id);
   //   return this.chatService.create(createChatDto);
   // }
-
-  @Get('userChats')
-  getUserChats(@UserRequest() user: UserFromRequest) {
-    return this.chatService.getUserChats(user.id);
-  }
 }
